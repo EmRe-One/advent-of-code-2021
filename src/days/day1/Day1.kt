@@ -5,7 +5,7 @@ import helper.FileReader
 object Day1 {
 
     fun solveExercise1(): Int {
-        val list = FileReader.readLinesToNumberList("./src/days/day1/input1.txt")
+        val list = FileReader.readLinesToNumberList("./src/days/day1/input_day1.txt")
 
         var result = 0
         list.forEachIndexed { index, i ->
@@ -19,7 +19,7 @@ object Day1 {
     }
 
     fun solveExercise2(): Int {
-        val input = FileReader.readLinesToNumberList("./src/days/day1/input1.txt")
+        val input = FileReader.readLinesToNumberList("./src/days/day1/input_day1.txt")
         val map = mutableMapOf<Int, MutableList<Int>>()
 
         input.forEachIndexed { index, i ->
