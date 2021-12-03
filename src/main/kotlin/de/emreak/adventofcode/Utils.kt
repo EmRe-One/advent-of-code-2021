@@ -7,11 +7,11 @@ object AdventOfCodeUtils {
     /**
      * Reads lines from the given input txt file.
      */
-    fun readLines(parent: String = "src", name: String) =
-        File(parent, "$name.txt").readLines()
+    fun readLines(parent: String = "src/main/resources", filename: String) =
+        File(parent, filename).readLines()
 
-    fun readLinesAsInts(parent: String = "src", name: String): List<Int> {
-        return readLines(parent, name).map { it.toInt() }
+    fun readLinesAsInts(parent: String = "src/main/resources", filename: String): List<Int> {
+        return readLines(parent, filename).map { it.toInt() }
     }
 
 }
@@ -19,6 +19,6 @@ object AdventOfCodeUtils {
 /**
  * Converts string to md5 hash.
  */
-fun String.md5(): String = BigInteger(1, MessageDigest.getInstance("MD5")
-    .digest(toByteArray()))
-    .toString(16)
+fun String.md5(): String = BigInteger(1,
+        MessageDigest.getInstance("MD5").digest(toByteArray())
+    ).toString(16)

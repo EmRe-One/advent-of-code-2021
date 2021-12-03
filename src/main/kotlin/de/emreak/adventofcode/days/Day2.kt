@@ -1,52 +1,60 @@
 package de.emreak.adventofcode.days
 
-import de.emreak.adventofcode.helper.FileReader
 
 object Day2 {
 
-    fun solveExercise1(): Int {
-        val input = FileReader.readLinesToList("src/days/day2/input_day2.txt")
+    fun part1(input: List<String>): Int {
+        var horizontalPosition = 0
+        var depth = 0
 
-        var positionX = 0
-        var positionDepth = 0
+        // ^ start line with one of (forward, down or up) ( also possible ^(\w+)
+        // _ one whitespace
+        // (\d+)$ finish line with a number with at least one digit
+        val regex = """^(?<direction>forward|down|up) (?<distance>\d+)$""".toRegex()
 
-        input.forEach { commandLine ->
-            val (command, amount) = commandLine.split(" ")
-
-            when (command) {
-                "forward" -> positionX += amount.toInt()
-                "down"    -> positionDepth += amount.toInt()
-                "up"      -> positionDepth -= amount.toInt()
-                else      -> throw IllegalArgumentException("Unknown command: $command")
-            }
+        val modifiedInput = input.map {
+            val (a, b) = regex.find(it)?.destructured ?: error("Invalid line: $it")
+            Pair(a, b.toInt())
         }
 
-        return positionX * positionDepth
+        modifiedInput.forEach { (direction, distance) ->
+            when (direction) {
+                "forward" -> horizontalPosition += distance
+                "down"    -> depth += distance
+                "up"      -> depth -= distance
+                else      -> throw IllegalArgumentException("Unknown direction: $direction")
+            }
+
+        }
+
+        return horizontalPosition * depth
     }
 
-    fun solveExercise2(): Int {
-        val input = FileReader.readLinesToList("src/days/day2/input_day2.txt")
-
+    fun part2(input: List<String>): Int {
         var positionX = 0
-        var positionDepth = 0
+        var depth = 0
         var aim = 0
 
-        input.forEach { commandLine ->
-            val (command, amount) = commandLine.split(" ")
+        val regex = """^(?<direction>forward|down|up) (?<distance>\d+)$""".toRegex()
 
-            val amountInt = amount.toInt()
-            when (command) {
+        val modifiedInput = input.map {
+            val (a, b) = regex.find(it)?.destructured ?: error("Invalid line: $it")
+            Pair(a, b.toInt())
+        }
+
+        modifiedInput.forEach { (direction, distance) ->
+            when (direction) {
                 "forward" -> {
-                    positionX += amount.toInt()
-                    positionDepth += aim * amountInt
+                    positionX += distance
+                    depth += aim * distance
                 }
-                "down"    -> aim += amountInt
-                "up"      -> aim -= amountInt
-                else      -> throw IllegalArgumentException("Unknown command: $command")
+                "down"    -> aim += distance
+                "up"      -> aim -= distance
+                else      -> throw IllegalArgumentException("Unknown command: $direction")
             }
         }
 
-        return positionX * positionDepth
+        return positionX * depth
     }
 
 }
