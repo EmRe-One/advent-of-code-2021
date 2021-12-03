@@ -1,6 +1,6 @@
-package days.day2
+package de.emreak.adventofcode.days
 
-import helper.FileReader
+import de.emreak.adventofcode.helper.FileReader
 
 object Day2 {
 
