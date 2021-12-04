@@ -4,10 +4,11 @@ import AdventOfCodeUtils
 import de.emreak.adventofcode.days.Day1
 import de.emreak.adventofcode.days.Day2
 import de.emreak.adventofcode.days.Day3
+import de.emreak.adventofcode.days.Day4
 
 fun main() {
 
-    val day = 3
+    val day = 4
 
     when(day) {
         1 -> {
@@ -35,6 +36,15 @@ fun main() {
             println("Solution1: $solution1")
 
             val solution2 = Day3.part2(input)
+            println("Solution2: $solution2")
+        }
+        4 -> {
+            val input = AdventOfCodeUtils.readLines(filename = "day4.txt")
+
+            val solution1 = Day4.part1(input)
+            println("Solution1: $solution1")
+
+            val solution2 = Day4.part2(input)
             println("Solution2: $solution2")
         }
         else -> {
