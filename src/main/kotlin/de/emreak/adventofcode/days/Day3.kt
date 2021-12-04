@@ -20,41 +20,32 @@ object Day3 {
     }
 
     fun part2(list: List<String>): Int {
-        // for the oxygen generator rating look at first digit --> 1 more then 0 --> filter ones
-        // 11110, 10110, 10111, 10101, 11100, 10000, and 11001
-        //         -      -      -             -
-        // look at second digit --> 0 more then 1 --> filter
-        // 10110, 10111, 10101, and 10000
-        //   -      -      -
-
-        // 10110, 10111, 10101
-        //    _      _
-        //
-        // 10110, 10111,
-        //            -  (at equality, select 1)
-        // 10111
-        val listLength = list.size
-        val lineLength = list[0].length
-
-        var oxygenGeneratorGroup: List<String> = mutableListOf()
-        var co2ScrubberRatingGroup: List<String> = mutableListOf()
+        var oxygenGeneratorGroup: List<String> = list
+        var co2ScrubberRatingGroup: List<String> = list
 
         var currentIndex = 0
+        while (oxygenGeneratorGroup.size > 1) {
+            var temp = oxygenGeneratorGroup.groupBy { it[currentIndex] }
+            oxygenGeneratorGroup = if ( (temp['1']?.size ?: 0) >= (temp['0']?.size ?: 0)) {
+                temp['1']!!
+            } else {
+                temp['0']!!
+            }
 
-        while (true) {
-            var groups = list.groupBy { it[currentIndex] }
-
-            var detectWhichDigit = if (groups['1']!!.size >= groups['0']!!.size) { '1' } else { '0' }
-            oxygenGeneratorGroup = groups[detectWhichDigit]!!
-
-
-            break
+            if (oxygenGeneratorGroup.size == 1) break else currentIndex++
         }
 
-        // val numberOfOnes = list.count { it[index] == '1' }
-        // val detectedDigit = if (numberOfOnes >= listLength / 2) "1" else "0"
+        currentIndex = 0
+        while (co2ScrubberRatingGroup.size > 1) {
+            var temp = co2ScrubberRatingGroup.groupBy { it[currentIndex] }
+            co2ScrubberRatingGroup = if ( (temp['0']?.size ?: 0) <= (temp['1']?.size ?: 0)) {
+                temp['0']!!
+            } else {
+                temp['1']!!
+            }
 
-
+            if (co2ScrubberRatingGroup.size == 1) break else currentIndex++
+        }
 
         return oxygenGeneratorGroup[0].toInt(2) * co2ScrubberRatingGroup[0].toInt(2)
     }

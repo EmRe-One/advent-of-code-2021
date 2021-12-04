@@ -3,6 +3,5 @@
 
 lib
 build
-src/**/*.txt
 
 *.iml
