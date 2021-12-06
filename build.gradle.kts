@@ -34,26 +34,56 @@ tasks.register("prepareNextDay") {
     doLast {
         val nextDay = 6
         val withTest = true
-        val packageId = "de.emreak.adventofcode"
+        val packageIdPath = "de.emreak.adventofcode".replace(".", "/")
 
-        val newSrcFile = """$projectDir/src/main/kotlin/${packageId.replace(".", "/")}/days/Day${nextDay}.kt"""
-        val newTestFile = """$projectDir/src/test/kotlin/${packageId.replace(".", "/")}/days/Day${nextDay}Test.kt"""
+        val mainFile    = """$projectDir/src/main/kotlin/${packageIdPath}/Main.kt"""
+        val newSrcFile  = """$projectDir/src/main/kotlin/${packageIdPath}/days/Day${nextDay}.kt"""
+        val newTestFile = """$projectDir/src/test/kotlin/${packageIdPath}/days/Day${nextDay}Test.kt"""
 
         if (file(newSrcFile).exists()) {
-            println("$newSrcFile already exists")
-        }
-        else {
+            println("WARNING: Files for Day$nextDay already exists. Do you really want to overwrite it?")
+        } else {
             file(newSrcFile).writeText(
-                file("""$projectDir/template/DayX.kt""").readText().replace("$1", "$nextDay")
+                file("""$projectDir/template/DayX.kt""")
+                    .readText()
+                    .replace("$1", "$nextDay")
             )
             file("""$projectDir/src/main/resources/day$nextDay.txt""").writeText("")
 
+            file(mainFile).writeText(
+                file(mainFile).readText()
+                    .replace(
+                        "// $1", """
+                            $nextDay -> solveDay${nextDay}()
+                            // ${"$"}1 
+                        """.trimIndent()
+                    )
+                    .replace(
+                        "// $2", """
+                        // ${"$"}2
+    
+                        fun solveDay${nextDay}() {
+                            val input = AdventOfCodeUtils.readLines(filename = "day${nextDay}.txt")
+    
+                            val solution1 = Day${nextDay}.part1(input)
+                            println("Solution1: ${"$"}solution1")
+    
+                            val solution2 = Day${nextDay}.part2(input)
+                            println("Solution2: ${"$"}solution2")
+                        }
+                        """.trimIndent()
+                    )
+            )
+
             if (withTest) {
                 file(newTestFile).writeText(
-                    file("""$projectDir/template/DayXTest.kt""").readText().replace("$1", "$nextDay")
+                    file("""$projectDir/template/DayXTest.kt""")
+                        .readText()
+                        .replace("$1", "$nextDay")
                 )
 
-                file("""$projectDir/src/test/resources/day${nextDay}_example.txt""").writeText("")
+                file("""$projectDir/src/test/resources/day${nextDay}_example.txt""")
+                    .writeText("")
             }
         }
     }
