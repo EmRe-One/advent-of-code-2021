@@ -2,42 +2,32 @@ package de.emreak.adventofcode.days
 
 object Day6 {
 
-    class LanternFish(private var internalTimer: Int) {
-        private val children = mutableListOf<LanternFish>()
-
-        fun tick() {
-            for(child in children) {
-                child.tick()
-            }
-
-            this.internalTimer--
-            if (this.internalTimer == -1) {
-                this.internalTimer = 6
-                this.children.add(LanternFish(8))
-            }
-        }
-
-        fun totalSum(): Int {
-            return 1 + children.sumOf { it.totalSum() }
-        }
-    }
-
-    fun part1(input: String, days: Int): Int {
+    fun countAllFishesAfterDays(input: String, days: Int): Long {
         val fishes = input.split(",")
-            .map {
-                LanternFish(it.toInt())
-            }.toMutableList()
+            .groupBy { it.toInt() }
+            .mapValues { it.value.size }
 
-        for (i in 0 until days) {
-            for (fish in fishes) {
-                fish.tick()
-            }
+        val fishDistribution = LongArray(9)
+
+        for(f in fishes) {
+            fishDistribution[f.key] = f.value.toLong()
         }
 
-        return fishes.sumOf { it.totalSum() }
+        var temp = 0L
+        for(i in 0 until days) {
+            temp = fishDistribution[0]
+            fishDistribution[0] = fishDistribution[1]
+            fishDistribution[1] = fishDistribution[2]
+            fishDistribution[2] = fishDistribution[3]
+            fishDistribution[3] = fishDistribution[4]
+            fishDistribution[4] = fishDistribution[5]
+            fishDistribution[5] = fishDistribution[6]
+            fishDistribution[6] = temp + fishDistribution[7]
+            fishDistribution[7] = fishDistribution[8]
+            fishDistribution[8] = temp
+        }
+
+        return fishDistribution.sumOf { it }
     }
 
-    fun part2(input: String, days: Int): Int {
-        return part1(input, days)
-    }
 }
