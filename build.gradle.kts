@@ -37,6 +37,7 @@ tasks.register("prepareNextDay") {
         val packageIdPath = "de.emreak.adventofcode".replace(".", "/")
 
         val mainFile    = """$projectDir/src/main/kotlin/${packageIdPath}/Main.kt"""
+        val readmeFile  = """$projectDir/README.md"""
         val newSrcFile  = """$projectDir/src/main/kotlin/${packageIdPath}/days/Day${nextDay}.kt"""
         val newTestFile = """$projectDir/src/test/kotlin/${packageIdPath}/days/Day${nextDay}Test.kt"""
 
@@ -55,7 +56,7 @@ tasks.register("prepareNextDay") {
                     .replace(
                         "// $1", """
                             $nextDay -> solveDay${nextDay}()
-                            // ${"$"}1 
+                            // ${"$1"} 
                         """.trimIndent()
                     )
                     .replace(
@@ -70,7 +71,17 @@ tasks.register("prepareNextDay") {
                             println("Solution2: ${"$"}solution2")
                         }
                         
-                        // ${"$"}2
+                        // ${"$2"}
+                        """.trimIndent()
+                    )
+            )
+
+            file(readmeFile).writeText(
+                file(readmeFile).readText()
+                    .replace(
+                        "$1",
+                        """| [Day ${nextDay}](https://adventofcode.com/2021/day/${nextDay}) | [Day${nextDay}Test.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/test/kotlin/de/emreak/adventofcode/days/Day${nextDay}Test.kt) | [Day${nextDay}.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/main/kotlin/de/emreak/adventofcode/days/Day${nextDay}.kt) |
+                            ${"$1"}
                         """.trimIndent()
                     )
             )
