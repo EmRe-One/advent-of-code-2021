@@ -60,8 +60,6 @@ tasks.register("prepareNextDay") {
                     )
                     .replace(
                         "// $2", """
-                        // ${"$"}2
-    
                         fun solveDay${nextDay}() {
                             val input = AdventOfCodeUtils.readLines(filename = "day${nextDay}.txt")
     
@@ -71,6 +69,8 @@ tasks.register("prepareNextDay") {
                             val solution2 = Day${nextDay}.part2(input)
                             println("Solution2: ${"$"}solution2")
                         }
+                        
+                        // ${"$"}2
                         """.trimIndent()
                     )
             )
