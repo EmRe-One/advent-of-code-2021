@@ -8,9 +8,9 @@ object Day3 {
         val result = arrayOfNulls<String>(inputLength)
 
         for(i in 0 until inputLength) {
-            val groups = list.groupBy { it[i] == '1' }
+            val (onesAtI, zerosAtI) = list.partition { it[i] == '1' }
 
-            result[i] = if (groups.getValue(true).size > groups.getValue(false).size) "1" else "0"
+            result[i] = if (onesAtI.size >= zerosAtI.size) "1" else "0"
         }
 
         val gamma = result.joinToString(separator = "").toInt(2)
@@ -20,34 +20,27 @@ object Day3 {
     }
 
     fun part2(list: List<String>): Int {
-        var oxygenGeneratorGroup: List<String> = list
-        var co2ScrubberRatingGroup: List<String> = list
+        var oxygenGeneratorList: List<String> = list
+        var i = 0
+        while (oxygenGeneratorList.size > 1) {
+            val (onesAtI, zerosAtI) = oxygenGeneratorList.partition { it[i] == '1' }
 
-        var currentIndex = 0
-        while (oxygenGeneratorGroup.size > 1) {
-            var temp = oxygenGeneratorGroup.groupBy { it[currentIndex] }
-            oxygenGeneratorGroup = if ( (temp['1']?.size ?: 0) >= (temp['0']?.size ?: 0)) {
-                temp['1']!!
-            } else {
-                temp['0']!!
-            }
+            oxygenGeneratorList = if ( onesAtI.size >= zerosAtI.size) onesAtI else zerosAtI
 
-            if (oxygenGeneratorGroup.size == 1) break else currentIndex++
+            if (oxygenGeneratorList.size == 1) break else i++
         }
 
-        currentIndex = 0
-        while (co2ScrubberRatingGroup.size > 1) {
-            var temp = co2ScrubberRatingGroup.groupBy { it[currentIndex] }
-            co2ScrubberRatingGroup = if ( (temp['0']?.size ?: 0) <= (temp['1']?.size ?: 0)) {
-                temp['0']!!
-            } else {
-                temp['1']!!
-            }
+        var co2ScrubberRatingList: List<String> = list
+        i = 0
+        while (co2ScrubberRatingList.size > 1) {
+            val (onesAtI, zerosAtI) = co2ScrubberRatingList.partition { it[i] == '1' }
 
-            if (co2ScrubberRatingGroup.size == 1) break else currentIndex++
+            co2ScrubberRatingList = if ( zerosAtI.size <= onesAtI.size) zerosAtI else onesAtI
+
+            if (co2ScrubberRatingList.size == 1) break else i++
         }
 
-        return oxygenGeneratorGroup[0].toInt(2) * co2ScrubberRatingGroup[0].toInt(2)
+        return oxygenGeneratorList[0].toInt(2) * co2ScrubberRatingList[0].toInt(2)
     }
 
 }

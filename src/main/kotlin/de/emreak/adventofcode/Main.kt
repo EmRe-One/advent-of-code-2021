@@ -8,7 +8,7 @@ import de.emreak.adventofcode.days.Day4
 
 fun main() {
 
-    val day = 4
+    val day = 3
 
     when(day) {
         1 -> {
