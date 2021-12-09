@@ -5,7 +5,7 @@ import de.emreak.adventofcode.days.*
 
 fun main() {
 
-    val day = 8
+    val day = 9
 
     when (day) {
         1 -> solveDay1()
