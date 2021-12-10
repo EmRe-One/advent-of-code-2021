@@ -5,7 +5,7 @@ import de.emreak.adventofcode.days.*
 
 fun main() {
 
-    val day = 9
+    val day = 10
 
     when (day) {
         1 -> solveDay1()
@@ -17,7 +17,8 @@ fun main() {
         7 -> solveDay7()
         8 -> solveDay8()
         9 -> solveDay9()
-// $1    
+        10 -> solveDay10()
+// $1     
         else -> {
             throw IllegalArgumentException("Day $day is not implemented yet.")
         }
@@ -112,6 +113,16 @@ fun solveDay9() {
     println("Solution1: $solution1")
 
     val solution2 = Day9.part2(input)
+    println("Solution2: $solution2")
+}
+
+fun solveDay10() {
+    val input = AdventOfCodeUtils.readLines(filename = "day10.txt")
+
+    val solution1 = Day10.part1(input)
+    println("Solution1: $solution1")
+
+    val solution2 = Day10.part2(input)
     println("Solution2: $solution2")
 }
 
