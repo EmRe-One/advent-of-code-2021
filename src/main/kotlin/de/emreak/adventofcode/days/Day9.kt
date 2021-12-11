@@ -1,14 +1,13 @@
 package de.emreak.adventofcode.days
 
-typealias Coords = Pair<Int, Int>
+import Coords
 
 object Day9 {
 
-    class Grid(input: List<String>) {
-        private val grid = mutableMapOf<Coords, Int>()
+    class Grid(var input: List<String>) {
+        val grid = mutableMapOf<Coords, Int>()
         val width = input.first().length
         val length = input.size
-        val total = width * length
 
         init {
             input.forEachIndexed { y, line ->
@@ -27,7 +26,7 @@ object Day9 {
                     minValueInNeighborhood = minOf(minValueInNeighborhood, grid[coords.first to (coords.second - 1)]!!)
                 }
                 if (coords.first < width - 1) { // not right edge
-                    minValueInNeighborhood = minOf(minValueInNeighborhood, grid[coords.first + 1 to coords.second]!!)
+                    minValueInNeighborhood = minOf(minValueInNeighborhood, grid[(coords.first + 1) to coords.second]!!)
                 }
                 if (coords.second < length - 1) { // not bottom edge
                     minValueInNeighborhood = minOf(minValueInNeighborhood, grid[coords.first to (coords.second + 1)]!!)
@@ -40,55 +39,50 @@ object Day9 {
             }
         }
 
-        private fun addNeighboorsToSet(current: Pair<Coords, Int>, coords: MutableSet<Coords>) {
+        private fun addNeighborsToSet(current: Pair<Coords, Int>, coords: MutableSet<Coords>) {
             val x = current.first.first
             val y = current.first.second
             val height = current.second
 
-            if (height == 9) {
+            if (height > 8) {
                 return
             } else {
                 coords.add(current.first)
             }
 
-            if (y > 0) { // not top edge
+            // not top edge
+            if (y > 0 && grid[x to (y - 1)]!! > height) {
                 val topNeighbor = (x to (y - 1)) to grid[x to (y - 1)]!!
-                if (topNeighbor.second == height + 1) {
-                    addNeighboorsToSet(topNeighbor, coords)
-                }
+                addNeighborsToSet(topNeighbor, coords)
             }
-            if (x < width - 1) { // not right edge
+            // not right edge
+            if (x < width - 1 && grid[(x + 1) to y]!! > height) {
                 val rightNeighbor = (x + 1 to y) to grid[(x + 1) to y]!!
-                if (rightNeighbor.second == height + 1) {
-                    addNeighboorsToSet(rightNeighbor, coords)
-                }
+                addNeighborsToSet(rightNeighbor, coords)
             }
-            if (y < length - 1) { // not bottom edge
+            // not bottom edge
+            if (y < length - 1 && grid[x to (y + 1)]!! > height) {
                 val bottomNeighbor = (x to (y + 1)) to grid[x to (y + 1)]!!
-                if (bottomNeighbor.second == height + 1) {
-                    addNeighboorsToSet(bottomNeighbor, coords)
-                }
+                addNeighborsToSet(bottomNeighbor, coords)
             }
-            if (x > 0) { // not left edge
+            // not left edge
+            if (x > 0 && grid[(x - 1) to y]!! > height) {
                 val leftNeighbor = ((x - 1) to y) to grid[(x - 1) to y]!!
-                if (leftNeighbor.second == height + 1) {
-                    addNeighboorsToSet(leftNeighbor, coords)
-                }
+                addNeighborsToSet(leftNeighbor, coords)
             }
         }
 
         fun getBasins(): List<Set<Coords>> {
-            val baseins = mutableListOf<Set<Coords>>()
+            val basins = mutableListOf<Set<Coords>>()
 
             getLowPoints().forEach {
                 val coords = mutableSetOf<Coords>()
-                addNeighboorsToSet(it, coords)
-                baseins.add(coords)
+                addNeighborsToSet(it, coords)
+                basins.add(coords)
             }
 
-            return baseins
+            return basins
         }
-
     }
 
     fun part1(input: List<String>): Int {

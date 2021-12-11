@@ -32,7 +32,7 @@ tasks {
 
 tasks.register("prepareNextDay") {
     doLast {
-        val nextDay = 10
+        val nextDay = 11
         val withTest = true
         val packageIdPath = "de.emreak.adventofcode".replace(".", "/")
 
@@ -80,7 +80,7 @@ tasks.register("prepareNextDay") {
                 file(readmeFile).readText()
                     .replace(
                         "<!-- $1 -->",
-                        """| [Day ${nextDay}](https://adventofcode.com/2021/day/${nextDay}) | [Day${nextDay}Test.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/test/kotlin/de/emreak/adventofcode/days/Day${nextDay}Test.kt) | [Day${nextDay}.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/main/kotlin/de/emreak/adventofcode/days/Day${nextDay}.kt) |
+                        """| [Day ${nextDay}](https://adventofcode.com/2021/day/${nextDay}) | [Day${nextDay}Test.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/test/kotlin/de/emreak/adventofcode/days/Day${nextDay}Test.kt) | [Day${nextDay}.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/main/kotlin/de/emreak/adventofcode/days/Day${nextDay}.kt) |       |       |
 ${"<!-- $1 -->"}
                         """.trimIndent()
                     )
