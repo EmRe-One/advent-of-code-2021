@@ -32,7 +32,7 @@ tasks {
 
 tasks.register("prepareNextDay") {
     doLast {
-        val nextDay = 12
+        val nextDay = 13
         val withTest = true
         val packageIdPath = "de.emreak.adventofcode".replace(".", "/")
 
