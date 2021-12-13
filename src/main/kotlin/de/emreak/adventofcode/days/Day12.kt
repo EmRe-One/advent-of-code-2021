@@ -1,6 +1,10 @@
 package de.emreak.adventofcode.days
 
+import mu.KotlinLogging
+
 object Day12 {
+
+    val logger = KotlinLogging.logger { }
 
     class Cave(var name: String) {
         val neighbors = mutableSetOf<Cave>()
@@ -93,7 +97,7 @@ object Day12 {
             fun getPossiblePathes(cave: Cave, path: List<Cave> = listOf(cave)) {
                 if (cave == end) {
                     possiblePathes.add(path)
-                    // println(path.joinToString(" -> ") { c -> c.name })
+                    logger.debug { path.joinToString(" -> ") { c -> c.name } }
                     return
                 }
 

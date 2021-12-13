@@ -11,6 +11,10 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
+    implementation("org.slf4j:slf4j-api:1.7.32")
+    implementation("ch.qos.logback:logback-classic:1.2.7")
+    implementation("ch.qos.logback:logback-core:1.2.7")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.1.0")
     testImplementation(kotlin("test"))
 }
 
@@ -65,10 +69,10 @@ tasks.register("prepareNextDay") {
                             val input = AdventOfCodeUtils.readLines(filename = "day${nextDay}.txt")
     
                             val solution1 = Day${nextDay}.part1(input)
-                            println("Solution1: ${"$"}solution1")
+                            logger.info { "Solution1: ${"$"}solution1" }
     
                             val solution2 = Day${nextDay}.part2(input)
-                            println("Solution2: ${"$"}solution2")
+                            logger.info { "Solution2: ${"$"}solution2" }
                         }
                         
                         // ${"$2"}
