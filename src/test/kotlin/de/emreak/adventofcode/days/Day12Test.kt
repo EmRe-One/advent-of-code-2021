@@ -6,15 +6,26 @@ import org.junit.jupiter.api.Test
 internal class Day12Test {
 
     @Test
-    fun part1() {
-        val input = AdventOfCodeUtils.readLines("src/test/resources", "day12_example.txt")
-        assertEquals(-1, Day12.part1(input), "Day12, Part1 should be -1.")
+    fun part1Small() {
+        val inputSmall = AdventOfCodeUtils.readLines("src/test/resources", "day12_small_example.txt")
+        assertEquals(10, Day12.part1(inputSmall), "Day12, Part1 - small example should be 10.")
     }
 
     @Test
-    fun part2() {
-        val input = AdventOfCodeUtils.readLines("src/test/resources", "day12_example.txt")
-        assertEquals(-1, Day12.part2(input), "Day12, Part2 should be -1.")
+    fun part1Large() {
+        val inputLarge = AdventOfCodeUtils.readLines("src/test/resources", "day12_large_example.txt")
+        assertEquals(226, Day12.part1(inputLarge), "Day12, Part1 - big example should be 226.")
     }
 
+    @Test
+    fun part2Small() {
+        val inputSmall = AdventOfCodeUtils.readLines("src/test/resources", "day12_small_example.txt")
+        assertEquals(36, Day12.part2(inputSmall), "Day12, Part2 - small example should be 105.")
+    }
+
+    @Test
+    fun part2Large() {
+        val inputLarge = AdventOfCodeUtils.readLines("src/test/resources", "day12_large_example.txt")
+        assertEquals(3509, Day12.part2(inputLarge), "Day12, Part2 - big example should be 3509.")
+    }
 }
