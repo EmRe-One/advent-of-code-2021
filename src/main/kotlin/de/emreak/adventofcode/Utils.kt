@@ -1,3 +1,4 @@
+import mu.KotlinLogging
 import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -5,6 +6,9 @@ import java.security.MessageDigest
 typealias Coords = Pair<Int, Int>
 
 object AdventOfCodeUtils {
+
+    val logger = KotlinLogging.logger {}
+    val debugLogger = KotlinLogging.logger("de.emreak.adventofcode.debug")
 
     /**
      * Reads lines from the given input txt file.

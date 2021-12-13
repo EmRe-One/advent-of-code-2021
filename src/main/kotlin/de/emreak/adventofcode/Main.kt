@@ -1,14 +1,15 @@
 package de.emreak.adventofcode
 
 import AdventOfCodeUtils
+import AdventOfCodeUtils.logger
 import de.emreak.adventofcode.days.*
 import mu.KotlinLogging
-
-val logger = KotlinLogging.logger {}
 
 fun main() {
 
     val day = 13
+
+    logger.info { "Day $day: " }
 
     when (day) {
         1 -> solveDay1()
