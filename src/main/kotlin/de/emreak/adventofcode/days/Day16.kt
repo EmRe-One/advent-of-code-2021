@@ -9,6 +9,7 @@ object Day16 {
         private val packetTypeId: Int
         private val children = mutableListOf<BITSPacket>()
         private var literalValue: BigInteger? = null
+        private var calculatedValue: BigInteger? = null
 
         var parsingIndex = 0
 
@@ -56,7 +57,7 @@ object Day16 {
             parsingIndex += 15
             val startOfOperatorData = parsingIndex
 
-            while(parsingIndex < startOfOperatorData + dataLength) {
+            while (parsingIndex < startOfOperatorData + dataLength) {
                 val nextBitString = bitMessage.substring(parsingIndex, bitMessage.length)
                 val child = BITSPacket(nextBitString)
                 this.children.add(child)
@@ -80,11 +81,60 @@ object Day16 {
             var result = 0
             result += this.packetVersion
 
-            for(child in children) {
+            for (child in children) {
                 result += child.getSumOfVersions()
             }
 
             return result
+        }
+
+        fun evaluate(): Long {
+            /*
+                Packets with type ID 0 are sum packets - their value is the sum of the values of their sub-packets. If they only have a single sub-packet, their value is the value of the sub-packet.
+                Packets with type ID 1 are product packets - their value is the result of multiplying together the values of their sub-packets. If they only have a single sub-packet, their value is the value of the sub-packet.
+                Packets with type ID 2 are minimum packets - their value is the minimum of the values of their sub-packets.
+                Packets with type ID 3 are maximum packets - their value is the maximum of the values of their sub-packets.
+                Packets with type ID 5 are greater than packets - their value is 1 if the value of the first sub-packet is greater than the value of the second sub-packet; otherwise, their value is 0. These packets always have exactly two sub-packets.
+                Packets with type ID 6 are less than packets - their value is 1 if the value of the first sub-packet is less than the value of the second sub-packet; otherwise, their value is 0. These packets always have exactly two sub-packets.
+                Packets with type ID 7 are equal to packets - their value is 1 if the value of the first sub-packet is equal to the value of the second sub-packet; otherwise, their value is 0. These packets always have exactly two sub-packets.
+            */
+            return when (this.packetTypeId) {
+                0 -> { // sum of childs
+                    var sum = 0L
+                    for (child in children) {
+                        sum += child.evaluate()
+                    }
+                    sum
+                }
+                1 -> { // product of childs
+                    var product = 1L
+                    for (child in children) {
+                        product *= child.evaluate()
+                    }
+                    product
+                }
+                2 -> { // min of
+                    this.children.map { it.evaluate() }.minOf{ it }
+                }
+                3 -> { // max of
+                    this.children.map { it.evaluate() }.maxOf{ it }
+                }
+                4 -> { // return literal value
+                    this.literalValue!!.toLong()
+                }
+                5 -> { // greater than
+                    if (this.children[0].evaluate() > this.children[1].evaluate()) 1L else 0L
+                }
+                6 -> { // less than
+                    if (this.children[0].evaluate() < this.children[1].evaluate()) 1L else 0L
+                }
+                7 -> { // equal to
+                    if (this.children[0].evaluate() == this.children[1].evaluate()) 1L else 0L
+                }
+                else -> {
+                    throw IllegalArgumentException("Unknown packet type ID: ${this.packetTypeId}")
+                }
+            }
         }
     }
 
@@ -94,12 +144,16 @@ object Day16 {
             .toString(2)
             .padStart(4 * hexLength, '0')
 
-        val temp = BITSPacket(bitMessage)
-        return temp.getSumOfVersions()
+        return BITSPacket(bitMessage).getSumOfVersions()
     }
 
-    fun part2(hexMessage: String): Int {
+    fun part2(hexMessage: String): Long {
+        val hexLength = hexMessage.length
+        val bitMessage = hexMessage.toBigInteger(16)
+            .toString(2)
+            .padStart(4 * hexLength, '0')
 
-        return 0
+        val parentBitsPacket = BITSPacket(bitMessage)
+        return parentBitsPacket.evaluate()
     }
 }

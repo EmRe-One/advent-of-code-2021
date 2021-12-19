@@ -17,7 +17,15 @@ internal class Day16Test {
     @Test
     fun part2() {
         val input = AdventOfCodeUtils.readLines("src/test/resources", "day16_example.txt")
-        assertEquals(-1, Day16.part2(input.first()), "Day16, Part2 should be -1.")
+
+        assertEquals(3, Day16.part2(input[5]), "Day16, Part2 - 1. Example should be 1 + 2 = 3.")
+        assertEquals(54, Day16.part2(input[6]), "Day16, Part2 - 1. Example should be 6 * 9 = 54.")
+        assertEquals(7, Day16.part2(input[7]), "Day16, Part2 - 1. Example should be min(7, 8, 9) = 7.")
+        assertEquals(9, Day16.part2(input[8]), "Day16, Part2 - 1. Example should be max(7, 8, 9) = 9.")
+        assertEquals(1, Day16.part2(input[9]), "Day16, Part2 - 1. Example should be 5 < 15 --> 1 (true).")
+        assertEquals(0, Day16.part2(input[10]), "Day16, Part2 - 1. Example should be 5 > 15 --> 0 (false).")
+        assertEquals(0, Day16.part2(input[11]), "Day16, Part2 - 1. Example should be 5 == 15 --> 0 (false).")
+        assertEquals(1, Day16.part2(input[12]), "Day16, Part2 - 1. Example should be 1 + 3 == 2 * 2 --> 1 (true).")
     }
 
 }
