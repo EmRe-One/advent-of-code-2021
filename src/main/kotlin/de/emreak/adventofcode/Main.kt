@@ -6,7 +6,7 @@ import de.emreak.adventofcode.days.*
 
 fun main() {
 
-    val day = 15
+    val day = 16
 
     logger.info { "Day $day: " }
 
@@ -188,11 +188,10 @@ fun solveDay15() {
 fun solveDay16() {
     val input = AdventOfCodeUtils.readLines(filename = "day16.txt")
 
-    val solution1 = Day16.part1(input)
+    val solution1 = Day16.part1(input.first())
     logger.info { "Solution1: $solution1" }
 
-    val solution2 = Day16.part2(input)
+    val solution2 = Day16.part2(input.first())
     logger.info { "Solution2: $solution2" }
 }
-
 // $2
