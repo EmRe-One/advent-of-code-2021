@@ -198,10 +198,10 @@ fun solveDay16() {
 fun solveDay17() {
     val input = AdventOfCodeUtils.readLines(filename = "day17.txt")
 
-    val solution1 = Day17.part1(input)
+    val solution1 = Day17.part1(input.first())
     logger.info { "Solution1: $solution1" }
 
-    val solution2 = Day17.part2(input)
+    val solution2 = Day17.part2(input.first())
     logger.info { "Solution2: $solution2" }
 }
 
