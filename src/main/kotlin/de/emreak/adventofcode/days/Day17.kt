@@ -109,7 +109,6 @@ object Day17 {
         fun calcTrajectories() {
             this.findPossibleInitialVelocities()
 
-            // val filteredTrajectories = this.possibleInitialVelocities.filter { it.second > 0 }
             for ((xV, yV) in this.possibleInitialVelocities) {
                 this.trajectories.add(Trajectory(Pair(xV, yV), this))
             }
