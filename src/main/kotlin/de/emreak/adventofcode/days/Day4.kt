@@ -38,8 +38,8 @@ object Day4 {
                 }
             }
             for (col in 0..4) {
-                val col = arrayOf(fields[0][col], fields[1][col], fields[2][col], fields[3][col], fields[4][col])
-                if (col.all { it.isMarked }) {
+                val tempCol = arrayOf(fields[0][col], fields[1][col], fields[2][col], fields[3][col], fields[4][col])
+                if (tempCol.all { it.isMarked }) {
                     this.finished = true
                     return true
                 }

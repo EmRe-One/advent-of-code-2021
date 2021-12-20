@@ -83,8 +83,8 @@ object Day15 {
     }
 
     fun part1(input: List<String>): Int {
-        val grid = input.mapIndexed { y, line ->
-            line.mapIndexed { x, c ->
+        val grid = input.mapIndexed { _, line ->
+            line.mapIndexed { _, c ->
                 c.digitToInt()
             }.toIntArray()
         }.toTypedArray()
@@ -103,15 +103,16 @@ object Day15 {
         val repeatX = 5
         val repeatY = 5
 
-        val grid = input.mapIndexed { y, line ->
-            line.mapIndexed { x, c ->
+        val grid = input.mapIndexed { _, line ->
+            line.mapIndexed { _, c ->
                 c.digitToInt()
             }.toIntArray()
         }.toTypedArray()
+
         val width = grid[0].size
         val height = grid.size
 
-        val fullmap = Array(repeatY * height) { IntArray(repeatX * width) { 0 } }
+        val fullMap = Array(repeatY * height) { IntArray(repeatX * width) { 0 } }
 
         for (y in 0 until height) {
             for (x in 0 until width) {
@@ -120,7 +121,7 @@ object Day15 {
                 for(yIter in 0 until repeatY) {
                     for(xIter in 0 until repeatX) {
                         val newValue = riskLevel + yIter + xIter
-                        fullmap[yIter * height + y][xIter * width + x] = if (newValue > 9) {
+                        fullMap[yIter * height + y][xIter * width + x] = if (newValue > 9) {
                             newValue - (newValue / 9) * 9
                         } else {
                             newValue
@@ -130,7 +131,7 @@ object Day15 {
             }
         }
 
-        val cavern = Cavern(fullmap)
+        val cavern = Cavern(fullMap)
         var start = Coords(0, 0)
         val destination = Coords(cavern.width - 1, cavern.height - 1)
 

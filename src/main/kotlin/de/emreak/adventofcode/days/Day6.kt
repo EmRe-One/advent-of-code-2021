@@ -13,7 +13,7 @@ object Day6 {
             fishDistribution[f.key] = f.value.toLong()
         }
 
-        var temp = 0L
+        var temp: Long
         for(i in 0 until days) {
             temp = fishDistribution[0]
             fishDistribution[0] = fishDistribution[1]
