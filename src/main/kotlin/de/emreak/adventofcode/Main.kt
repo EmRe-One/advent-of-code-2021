@@ -1,7 +1,6 @@
 package de.emreak.adventofcode
 
-import AdventOfCodeUtils
-import AdventOfCodeUtils.logger
+import de.emreak.adventofcode.AdventOfCodeUtils.logger
 import de.emreak.adventofcode.days.*
 
 fun main() {

@@ -1,6 +1,5 @@
 package de.emreak.adventofcode.days
 
-import AdventOfCodeUtils.logger
 import kotlin.math.ceil
 import kotlin.math.floor
 

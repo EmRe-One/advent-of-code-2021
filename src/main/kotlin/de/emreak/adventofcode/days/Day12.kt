@@ -1,6 +1,6 @@
 package de.emreak.adventofcode.days
 
-import AdventOfCodeUtils.logger
+import de.emreak.adventofcode.AdventOfCodeUtils.logger
 
 object Day12 {
 

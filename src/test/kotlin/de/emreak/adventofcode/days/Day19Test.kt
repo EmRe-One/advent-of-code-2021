@@ -1,5 +1,6 @@
 package de.emreak.adventofcode.days
 
+import de.emreak.adventofcode.AdventOfCodeUtils
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 

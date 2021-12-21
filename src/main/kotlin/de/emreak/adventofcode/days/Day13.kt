@@ -1,7 +1,7 @@
 package de.emreak.adventofcode.days
 
-import AdventOfCodeUtils.logger
-import Coords
+import de.emreak.adventofcode.AdventOfCodeUtils.logger
+import de.emreak.adventofcode.Coords
 
 object Day13 {
 
