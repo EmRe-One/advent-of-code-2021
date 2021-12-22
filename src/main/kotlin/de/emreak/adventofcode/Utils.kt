@@ -25,11 +25,17 @@ object AdventOfCodeUtils {
 }
 
 /**
- * Converts string to de.emreak.adventofcode.md5 hash.
+ * Converts string to md5 hash.
  */
 fun String.md5(): String = BigInteger(1,
         MessageDigest.getInstance("MD5").digest(toByteArray())
     ).toString(16)
+
+operator fun String.times(i: Int): String {
+    return IntRange(0, i).joinToString("") {
+        this
+    }
+}
 
 /**
  * Create a permutation of the given list
@@ -43,7 +49,6 @@ fun <T> List<T>.permutations(): List<List<T>> {
         }
     }
 }
-
 
 /*
  *  POWERSETS
