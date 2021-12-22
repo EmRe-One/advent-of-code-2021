@@ -5,7 +5,7 @@ import de.emreak.adventofcode.days.*
 
 fun main() {
 
-    val day = 21
+    val day = 20
 
     logger.info { "Day $day: " }
 
