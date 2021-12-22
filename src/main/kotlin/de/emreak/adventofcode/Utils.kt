@@ -25,7 +25,7 @@ object AdventOfCodeUtils {
 }
 
 /**
- * Converts string to de.emreak.adventofcode.md5 hash.
+ * Converts string to md5 hash.
  */
 fun String.md5(): String = BigInteger(1,
         MessageDigest.getInstance("MD5").digest(toByteArray())
@@ -43,7 +43,6 @@ fun <T> List<T>.permutations(): List<List<T>> {
         }
     }
 }
-
 
 /*
  *  POWERSETS
