@@ -14,7 +14,11 @@ object Day20 {
 
         var lightPixels = mutableSetOf<Coords>()
         private var steps: Int = 0
+
+        // if index 0 is '#' and index 512 is '.' the border is switching from '#' to '.' and vice versa
         private var togglingBorder = lookUpString.first() == '#' && lookUpString.last() == '.'
+
+        // use a expanded border during the algorithm or not for cutting
         private var expandBorder = true
 
         fun readImage(image: List<String>) {
@@ -70,29 +74,29 @@ object Day20 {
             }
 
             if (togglingBorder) {
-                if (!expandBorder) {
+                if (!expandBorder) { // if there is a light border, cut it
                     newImage = cutBorder(newImage, xRange, yRange).toMutableSet()
                 }
                 expandBorder = !expandBorder
             }
 
             lightPixels = newImage.toMutableSet()
+            calculateBoundingBox()
+            steps++
+        }
+
+        private fun cutBorder(image: MutableSet<Coords>, xRange: IntRange, yRange: IntRange): List<Coords> {
+            return image.filter {
+                it.first in (xRange.first + 2)..(xRange.last - 2)
+                        && it.second in (yRange.first + 2)..(yRange.last - 2)
+            }
+        }
+
+        private fun calculateBoundingBox() {
             minX = lightPixels.minOf { it.first }
             maxX = lightPixels.maxOf { it.first }
             minY = lightPixels.minOf { it.second }
             maxY = lightPixels.maxOf { it.second }
-            steps++
-        }
-
-        private fun cutBorder(
-            image: MutableSet<Coords>,
-            xRange: IntRange,
-            yRange: IntRange
-        ): List<Coords> {
-            return image.filter {
-                it.first in (xRange.first + 2) .. (xRange.last - 2)
-                        && it.second in (yRange.first + 2) .. (yRange.last - 2)
-            }
         }
 
         fun drawImage() {
