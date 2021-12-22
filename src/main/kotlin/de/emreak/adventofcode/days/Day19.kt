@@ -2,13 +2,15 @@ package de.emreak.adventofcode.days
 
 import de.emreak.adventofcode.AdventOfCodeUtils.logger
 import de.emreak.adventofcode.Point3D
+import de.emreak.adventofcode.combinations
 import de.emreak.adventofcode.permutations
+import kotlin.math.max
 
 object Day19 {
 
     private val transformations = listOf(0, 1, 2).permutations()
 
-    private fun transformedPoint(point: Point3D, transformationId: Int): Point3D {
+    private fun transformPoint(point: Point3D, transformationId: Int): Point3D {
         assert(transformationId in 0 until 48)
         val transformedPoint = mutableListOf(point.x, point.y, point.z)
 
@@ -33,7 +35,8 @@ object Day19 {
     class Scanner(input: List<String>) {
         val id: Int
         val beacons = mutableSetOf<Point3D>()
-        var relativeOrigin: Point3D? = null
+        var beaconsInGlobalCoord: MutableSet<Point3D>? = null
+        var originInGlobalCoord: Point3D? = null
         var transformationId: Int = 0
 
         init {
@@ -54,39 +57,41 @@ object Day19 {
             }
         }
 
-        fun detectPositionRelativeTo(otherScanner: Scanner): Boolean {
-            if (otherScanner.relativeOrigin == null) {
-                return false
+        fun detectPositionWithHelpOf(otherScanner: Scanner): Boolean {
+            if (otherScanner.originInGlobalCoord == null) {
+                throw IllegalArgumentException("otherScanner.relativeOrigin is null")
             }
 
             // try all possible directions
             directionLoop@
             for(direction in 0 until 48) {
-                val transformedPoints = this.beacons.map { transformedPoint(it, direction) }
+                val transformedPoints = this.beacons.map { transformPoint(it, direction) }
 
                 ownBeaconsLoop@
                 for(beacon in transformedPoints) {
 
                     otherBeaconsLoop@
-                    for (otherBeacon in otherScanner.beacons) {
+                    for (otherBeacon in otherScanner.beaconsInGlobalCoord!!) {
                         // assume that the beacon and otherBeacon are in the same position
-                        // otherBeacon + transformeVector = beacon
+                        // otherBeacon + transformVector = beacon
                         val translateVector = beacon - otherBeacon
 
                         // now try to find at least 11 other matching beacons
                         val translatedPoints = transformedPoints.map { it - translateVector }
 
                         val numberOfMatches = translatedPoints.count {
-                            it in otherScanner.beacons
+                            it in otherScanner.beaconsInGlobalCoord!!
                         }
 
                         if (numberOfMatches >= 12) {
                             this.transformationId = direction
-                            translatedPoints.forEach {
-                                otherScanner.beacons.add(it)
-                            }
-                            this.relativeOrigin = otherScanner.relativeOrigin!! - translateVector
+                            this.beaconsInGlobalCoord = translatedPoints.toMutableSet()
 
+                            translatedPoints.forEach {
+                                otherScanner.beaconsInGlobalCoord!!.add(it)
+                            }
+                            this.originInGlobalCoord = Point3D(0, 0, 0) - translateVector
+                            logger.debug { "Locate $this" }
                             return true
                         }
                     } // otherBeaconsLoop
@@ -97,10 +102,26 @@ object Day19 {
         }
 
         override fun toString(): String {
-            return "Scanner $id (transformationId: $transformationId, relativ origin to Scanner 0: ${relativeOrigin})"
+            return "Scanner $id (transformationId: $transformationId, origin: ${originInGlobalCoord})"
         }
 
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as Scanner
+
+            if (id != other.id) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            return id
+        }
     }
+
+    private val localizedScanner = mutableSetOf<Scanner>()
 
     fun part1(input: List<String>): Int {
         val scanner = mutableListOf<Scanner>()
@@ -116,37 +137,53 @@ object Day19 {
         }
 
         val scanner0 = scanner.first()
-        scanner0.relativeOrigin = Point3D(0, 0, 0)
+        scanner0.originInGlobalCoord = Point3D(0, 0, 0)
+        scanner0.beaconsInGlobalCoord = scanner0.beacons.toMutableSet()
 
-        val localizedScanner = mutableListOf(scanner0)
-        val notLocalizedScanner = mutableListOf<Scanner>()
-        notLocalizedScanner.addAll(scanner.drop(1))
+        localizedScanner.add(scanner0)
+        var notLocalizedScanner = mutableListOf<Scanner>().also { it.addAll(scanner.drop(1)) }
 
         while(notLocalizedScanner.isNotEmpty()) {
-            outerLoop@
-            for(s in notLocalizedScanner) {
-                for(ls in localizedScanner) {
-                    if (s.detectPositionRelativeTo(ls)) {
-                        localizedScanner.add(s)
-                        notLocalizedScanner.remove(s)
-                        break@outerLoop
+            val tempNotLocalized = notLocalizedScanner.toMutableSet()
+            val tempLocalized = localizedScanner.toMutableSet()
+
+            for(ls in localizedScanner) {
+                for(nls in notLocalizedScanner) {
+                    if(nls.originInGlobalCoord == null && nls.detectPositionWithHelpOf(ls)) {
+                        tempLocalized.add(nls)
+                        tempNotLocalized.remove(nls)
                     }
                 }
             }
+
+            notLocalizedScanner = tempNotLocalized.toMutableList()
+            localizedScanner.addAll(tempLocalized.toMutableList())
         }
 
         val setOfBeaconsRelativToScanner0 = mutableSetOf<Point3D>()
-        scanner0.beacons.forEach { setOfBeaconsRelativToScanner0.add(it) }
 
         for(s in localizedScanner) {
-            s.beacons.forEach { setOfBeaconsRelativToScanner0.add(it) }
+            s.beaconsInGlobalCoord!!.forEach { setOfBeaconsRelativToScanner0.add(it) }
         }
 
         return setOfBeaconsRelativToScanner0.size
     }
 
     fun part2(input: List<String>): Int {
+        if (localizedScanner.isEmpty()) {
+            part1(input)
+        }
 
-        return 0
+        var maxManhattanDistance = Int.MIN_VALUE
+        for(s1 in 0 until (localizedScanner.size - 1)) {
+            for(s2 in (s1 + 1) until localizedScanner.size) {
+                val manhattanDistance = localizedScanner.elementAt(s1).originInGlobalCoord!!
+                    .manhattanDistanceTo(localizedScanner.elementAt(s2).originInGlobalCoord!!)
+                logger.debug { "Distance between scanner ${localizedScanner.elementAt(s1).id} and scanner ${localizedScanner.elementAt(s2).id}: $manhattanDistance" }
+                maxManhattanDistance = max(maxManhattanDistance, manhattanDistance)
+            }
+        }
+
+        return maxManhattanDistance
     }
 }

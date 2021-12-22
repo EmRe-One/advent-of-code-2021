@@ -1,9 +1,13 @@
 package de.emreak.adventofcode
 
-import javax.naming.OperationNotSupportedException
-
+import kotlin.math.abs
 
 open class Point3D(val x: Int, val y: Int, val z: Int) {
+
+    fun manhattanDistanceTo(other: Point3D): Int {
+        return abs(x - other.x) + abs(y - other.y) + abs(z - other.z)
+    }
+
     fun getList(): List<Int> {
         return listOf(x, y, z)
     }
@@ -45,7 +49,6 @@ open class Point3D(val x: Int, val y: Int, val z: Int) {
     }
 
 }
-
 
 class Vector3D(val x: Int, val y:Int, val z:Int) {
 
