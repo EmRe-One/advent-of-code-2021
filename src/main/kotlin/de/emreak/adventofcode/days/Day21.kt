@@ -4,7 +4,7 @@ import de.emreak.adventofcode.AdventOfCodeUtils.logger
 
 object Day21 {
 
-    class DeterministicDice() {
+    class DeterministicDice {
         var current = 0
         var numberOfRolls = 0
 
@@ -18,7 +18,7 @@ object Day21 {
         }
     }
 
-    class Player(var position: Int) {
+    class Player(val id: Int, var position: Int) {
         var score = 0
 
         fun play(dice: DeterministicDice) {
@@ -34,17 +34,20 @@ object Day21 {
 
     fun part1(input: List<String>): Int {
         val dice = DeterministicDice()
-        val player1 = Player(7)
-        val player2 = Player(4)
-        var currentPlayer = player1
-
-        while (player1.score < 1000 && player2.score < 1000) {
-            currentPlayer.play(dice)
-            currentPlayer = if (currentPlayer == player1) player2 else player1
-            logger.debug { "Player 1: ${player1.score}, Player 2: ${player2.score}" }
+        val pattern = """Player (\w+) starting position: (\w+)""".toRegex()
+        val player = mutableListOf<Player>()
+        for(line in input) {
+            val (id, position) = pattern.matchEntire(line)!!.destructured
+            player.add(Player(id.toInt(), position.toInt()))
         }
+        var currentPlayer = 0
 
-        return player2.score * dice.numberOfRolls
+        while (player.all { it.score < 1000 }) {
+            player[currentPlayer].play(dice)
+            currentPlayer = (currentPlayer + 1) % player.size
+        }
+        val loser = player.first { it.score < 1000 }
+        return loser.score * dice.numberOfRolls
     }
 
     fun part2(input: List<String>): Int {
