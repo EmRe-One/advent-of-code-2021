@@ -15,7 +15,7 @@ internal class Day21Test {
     @Test
     fun part2() {
         val input = AdventOfCodeUtils.readLines("src/test/resources", "day21_example.txt")
-        assertEquals(-1, Day21.part2(input), "Day21, Part2 should be -1.")
+        assertEquals(444356092776315L, Day21.part2(input), "Day21, Part2 should be 444.356.092.776.315.")
     }
 
 }

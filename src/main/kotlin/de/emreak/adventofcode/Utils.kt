@@ -7,6 +7,12 @@ import java.security.MessageDigest
 
 typealias Coords = Pair<Int, Int>
 
+fun List<Pair<Long, Long>>.sum() = reduce { acc, pair -> acc + pair }
+
+operator fun Pair<Long, Long>.plus(other: Pair<Long, Long>): Pair<Long, Long> {
+    return first + other.first to second + other.second
+}
+
 object AdventOfCodeUtils {
 
     val logger = KotlinLogging.logger {}
