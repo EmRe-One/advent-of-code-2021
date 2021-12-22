@@ -3,7 +3,7 @@
 |                 |                                                                 |
 |-----------------|-----------------------------------------------------------------|
 | Written in      | ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin) |
-| Finish Level    | ![](https://img.shields.io/badge/📅%20days-21-blue)             |
+| Finish Level    | ![](https://img.shields.io/badge/📅%20days-22-blue)             |
 | Collected Stars | ![](https://img.shields.io/badge/⭐%20stars-42-green)            |
 
 ## Intro
@@ -35,4 +35,5 @@
 | [Day 19](https://adventofcode.com/2021/day/19) | [Day19Test.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/test/kotlin/de/emreak/adventofcode/days/Day19Test.kt) | [Day19.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/main/kotlin/de/emreak/adventofcode/days/Day19.kt) |   ⭐    |   ⭐    |
 | [Day 20](https://adventofcode.com/2021/day/20) | [Day20Test.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/test/kotlin/de/emreak/adventofcode/days/Day20Test.kt) | [Day20.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/main/kotlin/de/emreak/adventofcode/days/Day20.kt) |   ⭐    |   ⭐    |
 | [Day 21](https://adventofcode.com/2021/day/21) | [Day21Test.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/test/kotlin/de/emreak/adventofcode/days/Day21Test.kt) | [Day21.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/main/kotlin/de/emreak/adventofcode/days/Day21.kt) |   ⭐    |   ⭐    |
+| [Day 22](https://adventofcode.com/2021/day/22) | [Day22Test.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/test/kotlin/de/emreak/adventofcode/days/Day22Test.kt) | [Day22.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/main/kotlin/de/emreak/adventofcode/days/Day22.kt) |       |       |
 <!-- $1 -->
