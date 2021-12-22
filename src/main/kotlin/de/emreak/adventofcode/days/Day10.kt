@@ -1,41 +1,39 @@
 package de.emreak.adventofcode.days
 
-import java.util.*
-
-fun String.isCorrupted(): Boolean {
-    val stack = Stack<Char>()
-
-    for(i in 0 until this.length) {
-        val currentChar = this[i]
-
-        if (currentChar in arrayOf('(', '[', '{', '<')) {
-            stack.push(currentChar)
-        }
-        else {
-            if (stack.isEmpty()) {
-                return true
-            }
-
-            when(stack.pop()) {
-                '(' -> if (currentChar != ')') {
-                    return true
-                }
-                '[' -> if (currentChar != ']') {
-                    return true
-                }
-                '{' -> if (currentChar != '}') {
-                    return true
-                }
-                '<' -> if (currentChar != '>') {
-                    return true
-                }
-            }
-        }
-    }
-    return false
-}
+import java.util.Stack
 
 object Day10 {
+
+    fun isStringCorrupted(input: String): Boolean {
+        val stack = Stack<Char>()
+
+        for(currentChar in input) {
+            if (currentChar in arrayOf('(', '[', '{', '<')) {
+                stack.push(currentChar)
+            }
+            else {
+                if (stack.isEmpty()) {
+                    return true
+                }
+
+                when(stack.pop()) {
+                    '(' -> if (currentChar != ')') {
+                        return true
+                    }
+                    '[' -> if (currentChar != ']') {
+                        return true
+                    }
+                    '{' -> if (currentChar != '}') {
+                        return true
+                    }
+                    '<' -> if (currentChar != '>') {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
 
     fun part1(input: List<String>): Long {
         val scores = mapOf(
@@ -46,7 +44,7 @@ object Day10 {
         )
 
         return input.filter {
-            it.isCorrupted()
+            isStringCorrupted(it)
         }.sumOf { line ->
             var firstCorruptedChar = '!'
             val stack = Stack<Char>()
@@ -88,7 +86,7 @@ object Day10 {
 
     fun part2(input: List<String>): Long {
         val sortedScoreList = input.filter {
-            !it.isCorrupted()
+            !isStringCorrupted(it)
         }.map { line ->
             val stack = Stack<Char>()
 

@@ -1,12 +1,11 @@
 package de.emreak.adventofcode
 
-import AdventOfCodeUtils
-import AdventOfCodeUtils.logger
+import de.emreak.adventofcode.AdventOfCodeUtils.logger
 import de.emreak.adventofcode.days.*
 
 fun main() {
 
-    val day = 18
+    val day = 19
 
     logger.info { "Day $day: " }
 
@@ -29,7 +28,8 @@ fun main() {
         16 -> solveDay16()
         17 -> solveDay17()
         18 -> solveDay18()
-// $1             
+        19 -> solveDay19()
+// $1              
         else -> {
             throw IllegalArgumentException("Day $day is not implemented yet.")
         }
@@ -213,6 +213,16 @@ fun solveDay18() {
     logger.info { "Solution1: $solution1" }
 
     val solution2 = Day18.part2(input)
+    logger.info { "Solution2: $solution2" }
+}
+
+fun solveDay19() {
+    val input = AdventOfCodeUtils.readLines(filename = "day19.txt")
+
+    val solution1 = Day19.part1(input)
+    logger.info { "Solution1: $solution1" }
+
+    val solution2 = Day19.part2(input)
     logger.info { "Solution2: $solution2" }
 }
 

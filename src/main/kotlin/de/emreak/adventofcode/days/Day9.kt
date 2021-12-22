@@ -1,6 +1,6 @@
 package de.emreak.adventofcode.days
 
-import Coords
+import de.emreak.adventofcode.Coords
 
 object Day9 {
 
