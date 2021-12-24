@@ -1,44 +1,64 @@
 package de.emreak.adventofcode.days
 
-import de.emreak.adventofcode.Point3D
-import kotlin.math.max
-import kotlin.math.min
+import de.emreak.adventofcode.intersect
+import de.emreak.adventofcode.intersects
+import de.emreak.adventofcode.size
 
 object Day22 {
 
-    fun part1(input: List<String>): Int {
-        val pattern = """^(on|off) x=(-?\d+)..(-?\d+),y=(-?\d+)..(-?\d+),z=(-?\d+)..(-?\d+)$""".toRegex()
+    private class Cuboid(val on: Boolean, val x: IntRange, val y: IntRange, val z: IntRange) {
+        fun volume(): Long =
+            (if (on) 1 else -1) * (x.size().toLong() * y.size().toLong() * z.size().toLong())
 
-        val lights = mutableSetOf<Point3D>()
-        for(line in input) {
-            val (action, x1, x2, y1, y2, z1, z2) = pattern.matchEntire(line)!!.destructured
+        fun intersect(other: Cuboid): Cuboid? =
+            if (!intersects(other)) null
+            else Cuboid(!on, x intersect other.x, y intersect other.y, z intersect other.z)
 
-            val xMin = max(-50, x1.toInt())
-            val xMax = min(50, x2.toInt())
-            val yMin = max(-50, y1.toInt())
-            val yMax = min(50, y2.toInt())
-            val zMin = max(-50, z1.toInt())
-            val zMax = min(50, z2.toInt())
+        fun intersects(other: Cuboid): Boolean =
+            x.intersects(other.x) && y.intersects(other.y) && z.intersects(other.z)
 
-            for(x in xMin..xMax) {
-                for(y in yMin..yMax) {
-                    for(z in zMin..zMax) {
-                        val point = Point3D(x, y, z)
-                        if(action == "on") {
-                            lights.add(point)
-                        } else if (action == "off") {
-                            lights.remove(point)
-                        }
-                    }
-                }
+        companion object {
+            private val pattern =
+                """^(on|off) x=(-?\d+)..(-?\d+),y=(-?\d+)..(-?\d+),z=(-?\d+)..(-?\d+)$""".toRegex()
+
+            fun of(input: String): Cuboid {
+                val (l, x1, x2, y1, y2, z1, z2) = pattern.matchEntire(input)?.destructured
+                    ?: error("Cannot parse input: $input")
+                return Cuboid(
+                    l == "on",
+                    x1.toInt()..x2.toInt(),
+                    y1.toInt()..y2.toInt(),
+                    z1.toInt()..z2.toInt(),
+                )
             }
         }
-        return lights.size
     }
 
-    fun part2(input: List<String>): Int {
-        val pattern = """^(on|off) x=(-?\d+)..(-?\d+),y=(-?\d+)..(-?\d+),z=(-?\d+)..(-?\d+)$""".toRegex()
-        
-        return 0
+    private fun calcVolume(cuboids: List<Cuboid>): Long {
+        val volumes = mutableListOf<Cuboid>()
+
+        cuboids.forEach { cube ->
+            volumes.addAll(volumes.mapNotNull { it.intersect(cube) })
+            if (cube.on) {
+                volumes.add(cube)
+            }
+        }
+
+        return volumes.sumOf { it.volume() }
+    }
+
+    fun part1(input: List<String>): Int {
+        val initCuboid = Cuboid(true, -50..50, -50..50, -50..50)
+        val lights = input.map { Cuboid.of(it) }.filter {
+            it.intersects(initCuboid)
+        }
+
+        return calcVolume(lights).toInt()
+    }
+
+    fun part2(input: List<String>): Long {
+        val lights = input.map { Cuboid.of(it) }
+
+        return calcVolume(lights)
     }
 }
