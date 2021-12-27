@@ -48,8 +48,14 @@ fun String.md5(): String = BigInteger(1,
     ).toString(16)
 
 operator fun String.times(i: Int): String {
-    return IntRange(0, i).joinToString("") {
+    return IntRange(0, (i - 1)).joinToString("") {
         this
+    }
+}
+
+operator fun Char.times(i: Int): String {
+    return IntRange(0, (i - 1)).joinToString("") {
+        this.toString()
     }
 }
 
