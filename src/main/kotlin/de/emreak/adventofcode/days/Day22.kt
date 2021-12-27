@@ -18,6 +18,9 @@ object Day22 {
             x.intersects(other.x) && y.intersects(other.y) && z.intersects(other.z)
 
         companion object {
+            const val ON = true
+            const val OFF = false
+
             private val pattern =
                 """^(on|off) x=(-?\d+)..(-?\d+),y=(-?\d+)..(-?\d+),z=(-?\d+)..(-?\d+)$""".toRegex()
 
@@ -48,7 +51,7 @@ object Day22 {
     }
 
     fun part1(input: List<String>): Int {
-        val initCuboid = Cuboid(true, -50..50, -50..50, -50..50)
+        val initCuboid = Cuboid(Cuboid.ON, -50..50, -50..50, -50..50)
         val lights = input.map { Cuboid.of(it) }.filter {
             it.intersects(initCuboid)
         }
