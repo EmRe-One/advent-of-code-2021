@@ -11,15 +11,35 @@ object Day23 {
     const val SIGN_WALL = '#'
     const val SIGN_EMPTY_CELL = '.'
 
+    /**
+     * This class represents a burrow with a hallway and 4 rooms with a size of roomSize.
+     *
+     * #        : wall
+     * .        : empty cell
+     * A,B,C,D  : roomMembers
+     *
+     * The hallway is numbered from left to the right
+     * The rooms are numbered from hallway to bottom.
+     *  #############
+     *  #012........#   <- hallway
+     *  ###0#.#.#.###
+     *    #1#.#.#.#
+     *    #2#.#.#.#
+     *    #3#.#.#.#
+     *    #########
+     *     A B C D      <- rooms, here roomSize: 4
+     *
+     */
     class Burrow {
-        val hallway: MutableList<Char> = mutableListOf()
+        var hallway: MutableList<Char> = mutableListOf()
         var roomSize: Int = 0
-        val sideRooms: MutableMap<Char, MutableList<Char>> = mutableMapOf()
+        val rooms: MutableMap<Char, MutableList<Char>> = mutableMapOf()
+        var sortHistory: MutableList<String> = mutableListOf()
 
         private fun isCorrectSorted(): Boolean {
-            for ((roomName, roomMates) in sideRooms) {
+            for ((roomLabel, roomMates) in rooms) {
                 for (amphipod in roomMates) {
-                    if (amphipod != roomName) {
+                    if (amphipod != roomLabel) {
                         return false
                     }
                 }
@@ -28,25 +48,24 @@ object Day23 {
         }
 
         private fun canMoveFrom(roomLabel: Char): Boolean {
-            assert(this.sideRooms.containsKey(roomLabel)) { "Cannot move from unknown room $roomLabel" }
+            assert(this.rooms.containsKey(roomLabel)) { "Cannot move from unknown room $roomLabel" }
 
             // If there is still a foreign amphipod in the room
-            for (roomMate in sideRooms[roomLabel]!!) {
+            for (roomMate in rooms[roomLabel]!!) {
                 if (roomMate != roomLabel && roomMate != SIGN_EMPTY_CELL) {
                     return true
                 }
             }
-            // The room is empty or all amphipods in the room are all in the correct room.
-            // They don't have to leave the room.
+            // In the room are only correct amphipods or empty places.
             return false
         }
 
         private fun canMoveTo(roomLabel: Char): Boolean {
-            assert(this.sideRooms.containsKey(roomLabel)) { "Cannot move to unknown room $roomLabel" }
+            assert(this.rooms.containsKey(roomLabel)) { "Cannot move to unknown room $roomLabel" }
 
             // There are still foreign amphipods in the room.
             // No entry of correct amphipod allowed.
-            for (roomMate in sideRooms[roomLabel]!!) {
+            for (roomMate in rooms[roomLabel]!!) {
                 if (roomMate != roomLabel && roomMate != SIGN_EMPTY_CELL) {
                     return false
                 }
@@ -54,32 +73,50 @@ object Day23 {
             return true
         }
 
-        private fun between(a: Int, b: Int, c: Int): Boolean {
-            return (b in (a + 1) until c) || (b in (c + 1) until a)
+        /**
+         * helper method
+         *
+         * start < a < end
+         *      or
+         * end < a < start  (for the reversed direction)
+         *
+         */
+        private fun between(a: Int, start: Int, end: Int): Boolean {
+            return (a in (start + 1) until end) || (a in (end + 1) until start)
         }
 
         /**
          * check here if index is between the current hallwayIndex and the corresponding roomIndex
          * i.e. the D is at index 3 and want to move to index 8
-         * this method returns true if the index is between 4 and 8
+         * this method returns true if the path is clear between 3 and 8
          * otherwise false
          *
-         * 0 1 2 3 4 5 6 7 8 9 10
-         *     A   B   C   D
+         * 0 1 2 3 4 5 6 7 8 9 10   <- hallwayIndex
+         *     A   B   C   D        <- roomEntries at correct positions
          */
-        private fun pathIsPossible(roomLabel: Char, hallwayIndex: Int): Boolean {
+        private fun pathIsClear(roomLabel: Char, hallwayIndex: Int): Boolean {
             for (i in 0 until this.hallway.size) {
                 val roomIndex = ROOM_INDEX[roomLabel] ?: throw IllegalArgumentException("Unknown room label $roomLabel")
 
-                if (between(roomIndex, i, hallwayIndex) && this.hallway[i] != SIGN_EMPTY_CELL) {
+                // first:
+                //      check if i is between current hallwayIndex and roomIndex
+                // then:
+                //      check if the position i is empty
+                if (between(i, hallwayIndex, roomIndex) && this.hallway[i] != SIGN_EMPTY_CELL) {
                     return false
                 }
             }
             return true
         }
 
-        private fun getIndexInRoom(roomLabel: Char): Int? {
-            this.sideRooms[roomLabel]!!.mapIndexed { index, amphipod ->
+        /**
+         * returns the last empty cell index in the room
+         * or null
+         */
+        private fun getLastEmptyIndexInRoom(roomLabel: Char): Int? {
+            assert(this.rooms[roomLabel] != null) { "Cannot get destination index in unknown room $roomLabel" }
+
+            this.rooms[roomLabel]!!.mapIndexed { index, amphipod ->
                 index to amphipod
             }.reversed().forEach { (index, amphipod) ->
                 if (amphipod == SIGN_EMPTY_CELL) {
@@ -90,6 +127,27 @@ object Day23 {
             return null
         }
 
+        /**
+         * returns the first occupied index in the room next to the hallway
+         * or null
+         */
+        private fun getFirstOccupiedIndexInRoom(roomLabel: Char): Int? {
+            assert(this.rooms[roomLabel] != null) { "Cannot get top index in unknown room $roomLabel" }
+
+            this.rooms[roomLabel]!!.mapIndexed { index, amphipod ->
+                index to amphipod
+            }.forEach { (index, amphipod) ->
+                if (amphipod != SIGN_EMPTY_CELL) {
+                    return index
+                }
+            }
+
+            return null
+        }
+
+        /**
+         * Print the current state of the burrow
+         */
         fun printBurrow() {
             val burrowString = buildString {
                 // print top wall
@@ -108,8 +166,8 @@ object Day23 {
                     if (i == 0) append(SIGN_WALL * 2) else append("  ")
 
                     val t = mutableListOf<Char>()
-                    for (j in 0 until sideRooms.size) {
-                        t.add(sideRooms['A' + j]!![i])
+                    for (j in 0 until rooms.size) {
+                        t.add(rooms['A' + j]!![i])
                     }
                     append(
                         t.joinToString(
@@ -126,22 +184,29 @@ object Day23 {
             debugLogger.debug { burrowString }
         }
 
+        /**
+         * Convert the burrow to a unique string representation
+         */
         fun uniqueString(): String {
             return buildString {
-                append('{')
-                append(this@Burrow.hallway.joinToString(separator = ""))
-                for ((roomName, amphipods) in this@Burrow.sideRooms) {
-                    append(",$roomName:" + amphipods.joinToString(separator = ""))
+                append(this@Burrow.hallway.joinToString(prefix = "{H:", separator = "", postfix = "||"))
+                val t = mutableListOf<String>()
+                for ((roomName, amphipods) in this@Burrow.rooms) {
+                    t.add("$roomName:" + amphipods.joinToString(separator = ""))
                 }
+                append(t.joinToString(separator = "|"))
                 append('}')
             }
         }
 
         fun copy(): Burrow {
             return Burrow().also {
-                it.hallway.addAll(this.hallway)
+                it.hallway = this.hallway.toMutableList()
                 it.roomSize = this.roomSize
-                it.sideRooms.putAll(this.sideRooms)
+                this.rooms.forEach { (label, rooms) ->
+                    it.rooms[label] = rooms.toMutableList()
+                }
+                it.sortHistory = this.sortHistory.toMutableList()
             }
         }
 
@@ -154,7 +219,7 @@ object Day23 {
             )
 
             private val ROOM_INDEX: MutableMap<Char, Int> = mutableMapOf()
-            private val TOTAL_ENERGY_FOR_STATES: MutableMap<String, Int> = mutableMapOf()
+            private val TOTAL_ENERGY_FOR_STATES: MutableMap<String, Long> = mutableMapOf()
 
             fun parse(input: List<String>): Burrow {
                 val burrow = Burrow()
@@ -172,11 +237,11 @@ object Day23 {
                     val rooms = pattern.findAll(input[i]).toList()
                     for (roomNumber in rooms.indices) {
                         val amphipod = rooms[roomNumber].value.first()
-                        if (!burrow.sideRooms.containsKey('A' + roomNumber)) {
-                            burrow.sideRooms['A' + roomNumber] = Stack()
+                        if (!burrow.rooms.containsKey('A' + roomNumber)) {
+                            burrow.rooms['A' + roomNumber] = Stack()
                             ROOM_INDEX['A' + roomNumber] = (roomNumber + 1) * 2
                         }
-                        burrow.sideRooms['A' + roomNumber]!!.add(amphipod)
+                        burrow.rooms['A' + roomNumber]!!.add(amphipod)
                     }
                     burrow.roomSize++
                 }
@@ -184,9 +249,10 @@ object Day23 {
                 return burrow
             }
 
-            fun calculateEnergy(burrow: Burrow): Int {
+            fun calculateEnergy(burrow: Burrow): Long {
                 if (burrow.isCorrectSorted()) {
-                    return 0
+                    logger.info { "One possible solution reached :D" }
+                    return 0L
                 }
                 if (TOTAL_ENERGY_FOR_STATES.containsKey(burrow.uniqueString())) {
                     return TOTAL_ENERGY_FOR_STATES[burrow.uniqueString()]!!
@@ -194,19 +260,21 @@ object Day23 {
 
                 // if an amphipod can move to his correct room
                 burrow.hallway.forEachIndexed { hallwayIndex, cell ->
-                    if (burrow.sideRooms.containsKey(cell) && burrow.canMoveTo(cell)
-                        && burrow.pathIsPossible(cell, hallwayIndex)
+                    if (burrow.rooms.containsKey(cell)
+                        && burrow.canMoveTo(cell)
+                        && burrow.pathIsClear(cell, hallwayIndex)
                     ) {
-                        val distanceFromHallwayToFinalPosition = burrow.getIndexInRoom(cell)
-                        assert(distanceFromHallwayToFinalPosition != null) { "Room has no empty place." }
+                        val lastEmptyIndex = burrow.getLastEmptyIndexInRoom(cell)
+                        assert(lastEmptyIndex != null) { "Room has no empty place." }
 
-                        val distance = distanceFromHallwayToFinalPosition!! + abs(hallwayIndex - ROOM_INDEX[cell]!!)
+                        val distance = lastEmptyIndex!! + 1 + abs(hallwayIndex - ROOM_INDEX[cell]!!)
                         val energy = ENERGY_COST[cell]!! * distance
 
                         val newBurrow = burrow.copy()
-                        burrow.hallway[hallwayIndex] = SIGN_EMPTY_CELL
+                        newBurrow.sortHistory.add(burrow.uniqueString())
+                        // burrow.hallway[hallwayIndex] = SIGN_EMPTY_CELL
                         newBurrow.hallway[hallwayIndex] = SIGN_EMPTY_CELL
-                        newBurrow.sideRooms[cell]!![distanceFromHallwayToFinalPosition] = cell
+                        newBurrow.rooms[cell]!![lastEmptyIndex] = cell
 
                         logger.debug { "Moving from hallwayIndex $hallwayIndex to Room($cell) with a distance $distance for a energy cost $energy" }
                         newBurrow.printBurrow()
@@ -215,18 +283,16 @@ object Day23 {
                     }
                 }
 
-                var minimalCost = Int.MAX_VALUE
+                var minimalCost = Long.MAX_VALUE
                 sideRoomsLoop@
-                for ((roomLabel: Char, roomMates: MutableList<Char>) in burrow.sideRooms) {
+                for ((roomLabel: Char, roomMates: MutableList<Char>) in burrow.rooms) {
                     if (!burrow.canMoveFrom(roomLabel)) {
                         continue@sideRoomsLoop
                     }
 
-                    val amphipodOnTop = roomMates.mapIndexed { index, c ->
-                        index to c
-                    }.firstOrNull {
-                        it.second != SIGN_EMPTY_CELL
-                    } ?: continue@sideRoomsLoop
+                    val ki = burrow.getFirstOccupiedIndexInRoom(roomLabel) ?: continue@sideRoomsLoop
+
+                    val amphipodOnTop = roomMates[ki]
 
                     hallwayLoop@
                     for (hallwayIndex in 0 until burrow.hallway.size) {
@@ -239,24 +305,24 @@ object Day23 {
                             continue@hallwayLoop
                         }
                         // amphipod go out of the room to all possible hallway positions
-                        if (burrow.pathIsPossible(roomLabel, hallwayIndex)) {
-                            val dist = amphipodOnTop.first + abs(hallwayIndex - ROOM_INDEX[roomLabel]!!)
-                            val energy = ENERGY_COST[amphipodOnTop.second]!! * dist
+                        if (burrow.pathIsClear(roomLabel, hallwayIndex)) {
+                            val dist = ki + 1 + abs(hallwayIndex - ROOM_INDEX[roomLabel]!!)
+                            val energy = ENERGY_COST[amphipodOnTop]!! * dist
                             val newBurrow = burrow.copy()
+                            newBurrow.sortHistory.add(burrow.uniqueString())
 
                             assert(newBurrow.hallway[hallwayIndex] == SIGN_EMPTY_CELL) {
                                 "Hallway position at $hallwayIndex not empty."
                             }
-                            newBurrow.hallway[hallwayIndex] = amphipodOnTop.second
+                            newBurrow.hallway[hallwayIndex] = amphipodOnTop
 
-                            assert(newBurrow.sideRooms[roomLabel]!![amphipodOnTop.first] == amphipodOnTop.second) {
+                            assert(newBurrow.rooms[roomLabel]!![ki] == amphipodOnTop) {
                                 "Amphipod on top of the stack is not $amphipodOnTop."
                             }
-                            newBurrow.sideRooms[roomLabel]!![amphipodOnTop.first] = SIGN_EMPTY_CELL
+                            newBurrow.rooms[roomLabel]!![ki] = SIGN_EMPTY_CELL
 
-                            logger.debug { "Moving ${amphipodOnTop.second} from Room($roomLabel) with a distance $dist for a energy cost $energy" }
-                            logger.debug { "New Try with burrow:    ${burrow.uniqueString()}" }
-                            logger.debug { "New Try with newBurrow: ${newBurrow.uniqueString()}" }
+                            logger.debug { "Moving $amphipodOnTop from Room($roomLabel) with a distance $dist for a energy cost $energy" }
+
                             newBurrow.printBurrow()
                             minimalCost = min(minimalCost, energy + calculateEnergy(newBurrow))
                         }
@@ -269,12 +335,12 @@ object Day23 {
         }
     }
 
-    fun part1(input: List<String>): Int {
+    fun part1(input: List<String>): Long {
         val burrow = Burrow.parse(input)
         return Burrow.calculateEnergy(burrow)
     }
 
-    fun part2(input: List<String>): Int {
+    fun part2(input: List<String>): Long {
         val extendedInput = input.toMutableList().also {
             it.add(3, "#D#C#B#A#")
             it.add(4, "#D#B#A#C#")
