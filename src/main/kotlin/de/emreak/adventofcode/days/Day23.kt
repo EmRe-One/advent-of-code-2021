@@ -271,7 +271,7 @@ object Day23 {
                         val energy = ENERGY_COST[cell]!! * distance
 
                         val newBurrow = burrow.copy()
-                        newBurrow.sortHistory.add(burrow.uniqueString())
+
                         // burrow.hallway[hallwayIndex] = SIGN_EMPTY_CELL
                         newBurrow.hallway[hallwayIndex] = SIGN_EMPTY_CELL
                         newBurrow.rooms[cell]!![lastEmptyIndex] = cell
@@ -279,7 +279,15 @@ object Day23 {
                         logger.debug { "Moving from hallwayIndex $hallwayIndex to Room($cell) with a distance $distance for a energy cost $energy" }
                         newBurrow.printBurrow()
 
-                        return energy + calculateEnergy(newBurrow)
+                        val cost = energy + calculateEnergy(newBurrow)
+
+                        if (cost < 0) {
+                            logger.error { "Cost overflow: ignoring this value: $cost" }
+                            return Long.MAX_VALUE
+                        } else {
+                            burrow.sortHistory.add(newBurrow.uniqueString())
+                            return cost
+                        }
                     }
                 }
 
@@ -309,7 +317,6 @@ object Day23 {
                             val dist = ki + 1 + abs(hallwayIndex - ROOM_INDEX[roomLabel]!!)
                             val energy = ENERGY_COST[amphipodOnTop]!! * dist
                             val newBurrow = burrow.copy()
-                            newBurrow.sortHistory.add(burrow.uniqueString())
 
                             assert(newBurrow.hallway[hallwayIndex] == SIGN_EMPTY_CELL) {
                                 "Hallway position at $hallwayIndex not empty."
@@ -324,7 +331,15 @@ object Day23 {
                             logger.debug { "Moving $amphipodOnTop from Room($roomLabel) with a distance $dist for a energy cost $energy" }
 
                             newBurrow.printBurrow()
-                            minimalCost = min(minimalCost, energy + calculateEnergy(newBurrow))
+
+                            val cost = energy + calculateEnergy(newBurrow)
+                            if (cost < 0) {
+                                logger.error { "Cost overflow. Ignore this value: $cost" }
+                                Long.MAX_VALUE
+                            } else if (cost < minimalCost) {
+                                minimalCost = cost
+                                burrow.sortHistory.add(newBurrow.uniqueString())
+                            }
                         }
                     }
                 }
