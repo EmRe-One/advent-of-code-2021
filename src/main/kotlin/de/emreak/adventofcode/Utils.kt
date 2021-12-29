@@ -59,6 +59,19 @@ operator fun Char.times(i: Int): String {
     }
 }
 
+fun MutableList<Pair<String, Long>>.copy(from: MutableList<Pair<String, Long>>, deep: Boolean = false) {
+    this.clear()
+
+    if (!deep) {
+        this.addAll(from)
+    }
+    else {
+        from.forEach {
+            this.add(it.first to it.second)
+        }
+    }
+}
+
 /**
  * Create a permutation of the given list
  */
