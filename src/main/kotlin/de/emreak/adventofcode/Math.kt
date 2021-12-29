@@ -34,6 +34,24 @@ class Point2D(val x: Int, val y: Int) {
             Point2D(x - 1, y - 1)   // north-west
         )
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Point2D
+
+        if (x != other.x) return false
+        if (y != other.y) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = x
+        result = 31 * result + y
+        return result
+    }
+
 }
 
 class Point3D(val x: Int, val y: Int, val z: Int) {
