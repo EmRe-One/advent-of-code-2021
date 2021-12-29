@@ -248,7 +248,7 @@ object Day23 {
             )
 
             private val ROOM_INDEX: MutableMap<Char, Int> = mutableMapOf()
-            private val TOTAL_ENERGY_FOR_STATES: MutableMap<String, Long> = mutableMapOf()
+            private val TOTAL_ENERGY_FOR_STATES: MutableMap<String, MutableList<Pair<String, Long>>> = mutableMapOf()
 
             fun parse(input: List<String>): Burrow {
                 val burrow = Burrow()
@@ -284,9 +284,9 @@ object Day23 {
                     return 0L
                 }
                 if (TOTAL_ENERGY_FOR_STATES.containsKey(burrow.uniqueString())) {
-                    val cachedCost = TOTAL_ENERGY_FOR_STATES[burrow.uniqueString()]!!
-                    burrow.sortHistory.add(burrow.getBurrowRepresentation() to cachedCost)
-                    return cachedCost
+                    val cachedList = TOTAL_ENERGY_FOR_STATES[burrow.uniqueString()]!!
+                    burrow.sortHistory.copy(cachedList)
+                    return cachedList.lastOrNull()?.second ?: Long.MAX_VALUE
                 }
 
                 // if an amphipod can move to his correct room
@@ -321,6 +321,7 @@ object Day23 {
 
                 var minimalCost = Long.MAX_VALUE
                 val minimalCostHistory: MutableList<Pair<String, Long>> = mutableListOf()
+                minimalCostHistory.copy(burrow.sortHistory)
 
                 sideRoomsLoop@
                 for ((roomLabel: Char, roomMates: MutableList<Char>) in burrow.rooms) {
@@ -364,7 +365,6 @@ object Day23 {
                                 Long.MAX_VALUE
                             } else if (cost < minimalCost) {
                                 minimalCost = cost
-
                                 newBurrow.sortHistory.add(burrow.getBurrowRepresentation() to cost)
                                 minimalCostHistory.copy(newBurrow.sortHistory, true)
                             }
@@ -372,7 +372,7 @@ object Day23 {
                     }
                 }
 
-                TOTAL_ENERGY_FOR_STATES[burrow.uniqueString()] = minimalCost
+                TOTAL_ENERGY_FOR_STATES[burrow.uniqueString()] = minimalCostHistory
                 burrow.sortHistory.copy(minimalCostHistory, true)
                 return minimalCost
             }
@@ -382,7 +382,7 @@ object Day23 {
     fun part1(input: List<String>): Long {
         val burrow = Burrow.parse(input)
         val minCost = Burrow.calculateEnergy(burrow)
-        // burrow.printSortHistory()
+        burrow.printSortHistory()
         return minCost
     }
 
@@ -394,7 +394,7 @@ object Day23 {
         val burrow = Burrow.parse(extendedInput)
 
         val minCost = Burrow.calculateEnergy(burrow)
-        // burrow.printSortHistory()
+        burrow.printSortHistory()
         return minCost
     }
 }
