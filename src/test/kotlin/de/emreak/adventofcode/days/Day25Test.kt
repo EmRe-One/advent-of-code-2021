@@ -12,10 +12,4 @@ internal class Day25Test {
         assertEquals(58, Day25.part1(input), "Day25, Part1 should be 58.")
     }
 
-    @Test
-    fun part2() {
-        val input = AdventOfCodeUtils.readLines("src/test/resources", "day25_example.txt")
-        assertEquals(-1, Day25.part2(input), "Day25, Part2 should be -1.")
-    }
-
 }

@@ -287,9 +287,6 @@ fun solveDay25() {
 
     val solution1 = Day25.part1(input)
     logger.info { "Solution1: $solution1" }
-
-    val solution2 = Day25.part2(input)
-    logger.info { "Solution2: $solution2" }
 }
 
 // $2

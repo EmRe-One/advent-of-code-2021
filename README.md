@@ -4,7 +4,7 @@
 |-----------------|-----------------------------------------------------------------|
 | Written in      | ![Kotlin](https://img.shields.io/badge/Kotlin-grey?logo=Kotlin) |
 | Finish Level    | ![](https://img.shields.io/badge/📅%20days-25-blue)             |
-| Collected Stars | ![](https://img.shields.io/badge/⭐%20stars-48-green)            |
+| Collected Stars | ![](https://img.shields.io/badge/⭐%20stars-50-green)            |
 
 ## Intro
 
@@ -38,5 +38,5 @@
 | [Day 22](https://adventofcode.com/2021/day/22) | [Day22Test.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/test/kotlin/de/emreak/adventofcode/days/Day22Test.kt) | [Day22.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/main/kotlin/de/emreak/adventofcode/days/Day22.kt) |   ⭐    |   ⭐    |
 | [Day 23](https://adventofcode.com/2021/day/23) | [Day23Test.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/test/kotlin/de/emreak/adventofcode/days/Day23Test.kt) | [Day23.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/main/kotlin/de/emreak/adventofcode/days/Day23.kt) |   ⭐    |   ⭐    |
 | [Day 24](https://adventofcode.com/2021/day/24) | [Day24Test.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/test/kotlin/de/emreak/adventofcode/days/Day24Test.kt) | [Day24.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/main/kotlin/de/emreak/adventofcode/days/Day24.kt) |   ⭐    |   ⭐    |
-| [Day 25](https://adventofcode.com/2021/day/25) | [Day25Test.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/test/kotlin/de/emreak/adventofcode/days/Day25Test.kt) | [Day25.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/main/kotlin/de/emreak/adventofcode/days/Day25.kt) |        |        |
+| [Day 25](https://adventofcode.com/2021/day/25) | [Day25Test.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/test/kotlin/de/emreak/adventofcode/days/Day25Test.kt) | [Day25.kt](https://github.com/EmRe-One/advent-of-code-2021/blob/master/src/main/kotlin/de/emreak/adventofcode/days/Day25.kt) |   ⭐⭐   |   /    |
 <!-- $1 -->
