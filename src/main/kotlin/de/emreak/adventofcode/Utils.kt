@@ -3,6 +3,7 @@ package de.emreak.adventofcode
 import mu.KotlinLogging
 import java.io.File
 import java.math.BigInteger
+import java.net.URI
 import java.security.MessageDigest
 
 typealias Coords = Pair<Int, Int>
@@ -27,6 +28,10 @@ object AdventOfCodeUtils {
 
     val logger = KotlinLogging.logger {}
     val debugLogger = KotlinLogging.logger("de.emreak.adventofcode.debug")
+
+    private fun String.toURI(): URI =
+        AdventOfCodeUtils.javaClass.classLoader.getResource(this)?.toURI()
+            ?: throw IllegalArgumentException("Cannot find Resource: $this")
 
     /**
      * Reads lines from the given input txt file.
