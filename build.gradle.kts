@@ -34,7 +34,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.2.10")
     implementation("ch.qos.logback:logback-core:1.2.10")
     implementation("io.github.microutils:kotlin-logging-jvm:2.1.21")
-    implementation("tr.emreone:kotlin-utils:0.0.1")
+    implementation("tr.emreone:kotlin-utils:0.0.2")
     testImplementation(kotlin("test"))
 }
 
@@ -86,7 +86,7 @@ tasks.register("prepareNextDay") {
                     .replace(
                         "// $2", """
                         fun solveDay${nextDay}() {
-                            val input = AdventOfCodeUtils.readLines(filename = "day${nextDay}.txt")
+                            val input = FileLoader.readLines(filename = "day${nextDay}.txt")
     
                             val solution1 = Day${nextDay}.part1(input)
                             logger.info { "Solution1: ${"$"}solution1" }
