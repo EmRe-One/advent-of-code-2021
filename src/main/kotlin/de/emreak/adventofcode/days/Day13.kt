@@ -1,7 +1,7 @@
 package de.emreak.adventofcode.days
 
-import de.emreak.adventofcode.AdventOfCodeUtils.logger
-import de.emreak.adventofcode.Coords
+import tr.emreone.utils.Logger.logger
+import tr.emreone.utils.extensions.Coords
 
 object Day13 {
 
@@ -26,18 +26,19 @@ object Day13 {
 
         fun printPaper() {
             for (y in 0..this.maxY) {
-                var lineBuilder = StringBuilder()
-
-                for (x in 0..this.maxX) {
-                    val coords = Coords(x, y)
-                    if (coordsSet.contains(coords)) {
-                        lineBuilder.append("x")
-                    }
-                    else {
-                        lineBuilder.append(" ")
+                val paper = buildString {
+                    for (x in 0..this@TransparentPaper.maxX) {
+                        val coords = Coords(x, y)
+                        if (coordsSet.contains(coords)) {
+                            append("x")
+                        }
+                        else {
+                            append(" ")
+                        }
                     }
                 }
-                logger.info(lineBuilder.toString())
+
+                logger.info(paper)
             }
         }
 

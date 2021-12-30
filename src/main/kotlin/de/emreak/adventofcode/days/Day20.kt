@@ -1,8 +1,9 @@
 package de.emreak.adventofcode.days
 
-import de.emreak.adventofcode.AdventOfCodeUtils.logger
-import de.emreak.adventofcode.Coords
-import de.emreak.adventofcode.times
+import tr.emreone.utils.Logger.logger
+import tr.emreone.utils.extensions.Coords
+import tr.emreone.utils.extensions.times
+
 
 object Day20 {
 
@@ -18,7 +19,7 @@ object Day20 {
         // if index 0 is '#' and index 512 is '.' the border is switching from '#' to '.' and vice versa
         private var togglingBorder = lookUpString.first() == '#' && lookUpString.last() == '.'
 
-        // use a expanded border during the algorithm or not for cutting
+        // use an expanded border during the algorithm or not for cutting
         private var expandBorder = true
 
         fun readImage(image: List<String>) {

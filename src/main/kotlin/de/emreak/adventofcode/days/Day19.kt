@@ -1,9 +1,8 @@
 package de.emreak.adventofcode.days
 
-import de.emreak.adventofcode.AdventOfCodeUtils.logger
-import de.emreak.adventofcode.Point3D
-import de.emreak.adventofcode.combinations
-import de.emreak.adventofcode.permutations
+import tr.emreone.utils.Logger.logger
+import tr.emreone.utils.extensions.permutations
+import tr.emreone.utils.math.Point3D
 import kotlin.math.max
 
 object Day19 {
@@ -12,7 +11,7 @@ object Day19 {
 
     private fun transformPoint(point: Point3D, transformationId: Int): Point3D {
         assert(transformationId in 0 until 48)
-        val transformedPoint = mutableListOf(point.x, point.y, point.z)
+        val transformedPoint = mutableListOf(point.x.toInt(), point.y.toInt(), point.z.toInt())
 
         // 0 - 1 - 0 - 1 - 0 - 1 - 0 - 1 ...
         if (transformationId % 2 == 1) {
@@ -28,7 +27,7 @@ object Day19 {
         }
 
         transformations[transformationId / 8].also { perm ->
-            return Point3D(transformedPoint[perm[0]], transformedPoint[perm[1]], transformedPoint[perm[2]])
+            return Point3D(transformedPoint[perm[0]].toLong(), transformedPoint[perm[1]].toLong(), transformedPoint[perm[2]].toLong())
         }
     }
 
@@ -49,9 +48,9 @@ object Day19 {
             for (line in input.drop(1)) {
                 if (line.isNotBlank()) {
                     val pointMatch = pointPattern.matchEntire(line)!!
-                    val x = pointMatch.groupValues[1].toInt()
-                    val y = pointMatch.groupValues[2].toInt()
-                    val z = pointMatch.groupValues[3].toInt()
+                    val x = pointMatch.groupValues[1].toLong()
+                    val y = pointMatch.groupValues[2].toLong()
+                    val z = pointMatch.groupValues[3].toLong()
                     beacons.add(Point3D(x, y, z))
                 }
             }
@@ -169,12 +168,12 @@ object Day19 {
         return setOfBeaconsRelativToScanner0.size
     }
 
-    fun part2(input: List<String>): Int {
+    fun part2(input: List<String>): Long {
         if (localizedScanner.isEmpty()) {
             part1(input)
         }
 
-        var maxManhattanDistance = Int.MIN_VALUE
+        var maxManhattanDistance = Long.MIN_VALUE
         for(s1 in 0 until (localizedScanner.size - 1)) {
             for(s2 in (s1 + 1) until localizedScanner.size) {
                 val manhattanDistance = localizedScanner.elementAt(s1).originInGlobalCoord!!

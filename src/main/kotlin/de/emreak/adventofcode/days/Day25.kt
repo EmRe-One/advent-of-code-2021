@@ -1,7 +1,7 @@
 package de.emreak.adventofcode.days
 
-import de.emreak.adventofcode.AdventOfCodeUtils.logger
-import de.emreak.adventofcode.Point2D
+import tr.emreone.utils.Logger.logger
+import tr.emreone.utils.math.Point2D
 
 object Day25 {
 
@@ -10,7 +10,7 @@ object Day25 {
         private val height = input.size
         private val region = input.flatMapIndexed { y: Int, line: String ->
             line.mapIndexed { x: Int, c: Char ->
-                Point2D(x, y) to c
+                Point2D(x.toLong(), y.toLong()) to c
             }
         }.filterNot {
             it.second == SIGN_EMPTY
@@ -74,7 +74,7 @@ object Day25 {
                 appendLine()
                 for(y in 0 until height) {
                     for (x in 0 until width) {
-                        append(seaCucumber[Point2D(x, y)] ?: SIGN_EMPTY)
+                        append(seaCucumber[Point2D(x.toLong(), y.toLong())] ?: SIGN_EMPTY)
                     }
                     appendLine()
                 }

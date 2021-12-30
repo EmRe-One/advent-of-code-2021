@@ -1,18 +1,18 @@
 package de.emreak.adventofcode.days
 
-import de.emreak.adventofcode.Coords
+import tr.emreone.utils.extensions.Coords
 
 object Day9 {
 
     class Grid(var input: List<String>) {
-        val grid = mutableMapOf<Coords, Int>()
-        val width = input.first().length
-        val length = input.size
+        private val grid = mutableMapOf<Coords, Int>()
+        private val width = input.first().length
+        private val length = input.size
 
         init {
             input.forEachIndexed { y, line ->
                 line.forEachIndexed { x, c ->
-                    grid[Pair(x, y)] = c.code - 48
+                    grid[Pair(x, y)] = c.digitToInt()
                 }
             }
         }
@@ -20,7 +20,7 @@ object Day9 {
         fun getLowPoints(): List<Pair<Coords, Int>> {
             return this.grid.toList().filter { pair ->
                 var minValueInNeighborhood = 10
-                var coords = pair.first
+                val coords = pair.first
 
                 if (coords.second > 0) { // not top edge
                     minValueInNeighborhood = minOf(minValueInNeighborhood, grid[coords.first to (coords.second - 1)]!!)

@@ -1,15 +1,15 @@
 package de.emreak.adventofcode.days
 
-import de.emreak.adventofcode.AdventOfCodeUtils.logger
+import tr.emreone.utils.Logger.logger
 
 object Day14 {
 
     fun part1(input: List<String>): Int {
         val template = input.first()
-        val rules = input.drop(2).map {
+        val rules = input.drop(2).associate {
             val (pattern, result) = it.split(" -> ")
             pattern to result
-        }.toMap()
+        }
 
         val polymerChain = StringBuilder(template)
         var currentPolymer = polymerChain.toString()

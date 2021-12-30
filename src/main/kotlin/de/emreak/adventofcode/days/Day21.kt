@@ -1,7 +1,5 @@
 package de.emreak.adventofcode.days
 
-import de.emreak.adventofcode.AdventOfCodeUtils.logger
-import de.emreak.adventofcode.plus
 import kotlin.math.max
 
 object Day21 {

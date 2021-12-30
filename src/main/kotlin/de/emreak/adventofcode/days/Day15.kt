@@ -1,7 +1,7 @@
 package de.emreak.adventofcode.days
 
-import de.emreak.adventofcode.AdventOfCodeUtils.logger
-import de.emreak.adventofcode.Coords
+import tr.emreone.utils.Logger.logger
+import tr.emreone.utils.extensions.Coords
 import java.util.PriorityQueue
 import kotlin.math.max
 import kotlin.math.min

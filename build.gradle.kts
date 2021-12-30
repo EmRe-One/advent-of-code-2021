@@ -5,16 +5,36 @@ plugins {
 group = "de.emreak.adventofcode"
 version = "2021"
 
+fun getValue(key: String, filename: String = "keys.properties"): String {
+    val items = HashMap<String, String>()
+    val f = File(filename)
+
+    f.forEachLine {
+        val split = it.split("=")
+        items[split[0].trim()] = split[1].trim().removeSurrounding("\"")
+    }
+
+    return items[key]?: throw IllegalArgumentException("Key $key not found")
+}
+
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://maven.pkg.github.com/Emre-One/kotlin-utils")
+        credentials {
+            username = getValue("GITHUB_USERNAME")
+            password = getValue("GITHUB_TOKEN")
+        }
+    }
 }
 
 dependencies {
     implementation(kotlin("stdlib"))
     implementation("org.slf4j:slf4j-api:1.7.32")
-    implementation("ch.qos.logback:logback-classic:1.2.7")
-    implementation("ch.qos.logback:logback-core:1.2.7")
-    implementation("io.github.microutils:kotlin-logging-jvm:2.1.0")
+    implementation("ch.qos.logback:logback-classic:1.2.10")
+    implementation("ch.qos.logback:logback-core:1.2.10")
+    implementation("io.github.microutils:kotlin-logging-jvm:2.1.21")
+    implementation("tr.emreone:kotlin-utils:0.0.1")
     testImplementation(kotlin("test"))
 }
 

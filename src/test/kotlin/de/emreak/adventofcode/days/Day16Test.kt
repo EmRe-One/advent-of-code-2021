@@ -1,6 +1,6 @@
 package de.emreak.adventofcode.days
 
-import de.emreak.adventofcode.AdventOfCodeUtils
+import tr.emreone.utils.FileLoader
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -8,7 +8,7 @@ internal class Day16Test {
 
     @Test
     fun part1() {
-        val input = AdventOfCodeUtils.readLines("src/test/resources", "day16_example.txt")
+        val input = FileLoader.readLines("src/test/resources", "day16_example.txt")
         assertEquals(16, Day16.part1(input[0]), "Day16, Part1 - 1. Example should be 16.")
         assertEquals(12, Day16.part1(input[1]), "Day16, Part1 - 2. Example should be 12.")
         assertEquals(23, Day16.part1(input[2]), "Day16, Part1 - 3. Example should be 23.")
@@ -17,7 +17,7 @@ internal class Day16Test {
 
     @Test
     fun part2() {
-        val input = AdventOfCodeUtils.readLines("src/test/resources", "day16_example.txt")
+        val input = FileLoader.readLines("src/test/resources", "day16_example.txt")
 
         assertEquals(3, Day16.part2(input[5]), "Day16, Part2 - 1. Example should be 1 + 2 = 3.")
         assertEquals(54, Day16.part2(input[6]), "Day16, Part2 - 1. Example should be 6 * 9 = 54.")

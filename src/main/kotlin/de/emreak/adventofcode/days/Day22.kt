@@ -1,8 +1,9 @@
 package de.emreak.adventofcode.days
 
-import de.emreak.adventofcode.intersect
-import de.emreak.adventofcode.intersects
-import de.emreak.adventofcode.size
+import tr.emreone.utils.extensions.intersects
+import tr.emreone.utils.extensions.intersect
+import tr.emreone.utils.extensions.size
+
 
 object Day22 {
 

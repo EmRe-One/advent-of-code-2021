@@ -1,9 +1,8 @@
 package de.emreak.adventofcode.days
 
-import de.emreak.adventofcode.AdventOfCodeUtils.debugLogger
-import de.emreak.adventofcode.AdventOfCodeUtils.logger
-import de.emreak.adventofcode.copy
-import de.emreak.adventofcode.times
+import tr.emreone.utils.Logger.logger
+import tr.emreone.utils.extensions.copy
+import tr.emreone.utils.extensions.times
 import java.util.*
 import kotlin.math.abs
 
