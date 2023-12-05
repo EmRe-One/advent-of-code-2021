@@ -1,11 +1,13 @@
 plugins {
-    kotlin("jvm") version "1.6.0"
+    kotlin("jvm") version "1.9.20"
+    kotlin("plugin.serialization") version "1.9.20"
+    application
 }
 
 group = "de.emreak.adventofcode"
 version = "2021"
 
-fun getValue(key: String, filename: String = "keys.properties"): String {
+fun getValue(key: String, filename: String = "../keys.properties"): String {
     val items = HashMap<String, String>()
     val f = File(filename)
 
@@ -28,13 +30,21 @@ repositories {
     }
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
 dependencies {
     implementation(kotlin("stdlib"))
     implementation("org.slf4j:slf4j-api:1.7.32")
     implementation("ch.qos.logback:logback-classic:1.2.10")
     implementation("ch.qos.logback:logback-core:1.2.10")
     implementation("io.github.microutils:kotlin-logging-jvm:2.1.21")
-    implementation("tr.emreone:kotlin-utils:0.0.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+
+    implementation("tr.emreone:kotlin-utils:0.2.2")
+
     testImplementation(kotlin("test"))
 }
 
