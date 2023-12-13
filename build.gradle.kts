@@ -10,11 +10,7 @@ version = "2021"
 repositories {
     mavenCentral()
     maven {
-        url = uri("https://maven.pkg.github.com/Emre-One/kotlin-utils")
-        credentials {
-            username = getValue("GITHUB_USERNAME")
-            password = getValue("GITHUB_TOKEN")
-        }
+        url = uri("https://jitpack.io")
     }
 }
 
@@ -40,6 +36,13 @@ tasks {
     wrapper {
         gradleVersion = "8.5"
     }
+    "run"(JavaExec::class) {
+        environment("SESSION_COOKIE", getValue("SESSION_COOKIE"))
+    }
+}
+
+tasks.withType<Test> {
+    environment("SESSION_COOKIE", getValue("SESSION_COOKIE"))
 }
 
 dependencies {
@@ -57,14 +60,11 @@ dependencies {
     implementation("com.github.ajalt.mordant:mordant:2.2.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 
-    implementation("tr.emreone:kotlin-utils:0.2.3")
+    implementation("com.github.EmRe-One:Kotlin-Utils:master-SNAPSHOT")
 
     testImplementation(kotlin("test"))
 }
 
-/**
- *
- */
 fun getValue(key: String, filename: String = "../keys.properties"): String {
     val items = HashMap<String, String>()
     val f = File(filename)

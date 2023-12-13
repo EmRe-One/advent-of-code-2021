@@ -1,11 +1,12 @@
 package tr.emreone.adventofcode.days
 
-import tr.emreone.utils.extensions.intersects
-import tr.emreone.utils.extensions.intersect
-import tr.emreone.utils.extensions.size
+import tr.emreone.kotlin_utils.automation.Day
+import tr.emreone.kotlin_utils.extensions.intersect
+import tr.emreone.kotlin_utils.extensions.intersects
+import tr.emreone.kotlin_utils.extensions.size
 
 
-object Day22 {
+class Day22 : Day(22, 2021, "Reactor Reboot") {
 
     private class Cuboid(val on: Boolean, val x: IntRange, val y: IntRange, val z: IntRange) {
         fun volume(): Long =
@@ -51,18 +52,23 @@ object Day22 {
         return volumes.sumOf { it.volume() }
     }
 
-    fun part1(input: List<String>): Int {
+    override fun part1(): Int {
         val initCuboid = Cuboid(Cuboid.ON, -50..50, -50..50, -50..50)
-        val lights = input.map { Cuboid.of(it) }.filter {
-            it.intersects(initCuboid)
-        }
+        val lights = inputAsList
+            .map {
+                Cuboid.of(it)
+            }
+            .filter {
+                it.intersects(initCuboid)
+            }
 
         return calcVolume(lights).toInt()
     }
 
-    fun part2(input: List<String>): Long {
-        val lights = input.map { Cuboid.of(it) }
+    override fun part2(): Long {
+        val lights = inputAsList.map { Cuboid.of(it) }
 
         return calcVolume(lights)
     }
+
 }

@@ -1,9 +1,11 @@
 package tr.emreone.adventofcode.days
 
+import tr.emreone.kotlin_utils.automation.Day
 
-object Day2 {
 
-    fun part1(input: List<String>): Int {
+class Day02 : Day(2, 2021, "Dive!") {
+
+    override fun part1(): Int {
         var horizontalPosition = 0
         var depth = 0
 
@@ -12,7 +14,7 @@ object Day2 {
         // (\d+)$ finish line with a number with at least one digit
         val regex = """^(?<direction>forward|down|up) (?<distance>\d+)$""".toRegex()
 
-        val modifiedInput = input.map {
+        val modifiedInput = inputAsList.map {
             val (a, b) = regex.find(it)?.destructured ?: error("Invalid line: $it")
             Pair(a, b.toInt())
         }
@@ -20,9 +22,9 @@ object Day2 {
         modifiedInput.forEach { (direction, distance) ->
             when (direction) {
                 "forward" -> horizontalPosition += distance
-                "down"    -> depth += distance
-                "up"      -> depth -= distance
-                else      -> throw IllegalArgumentException("Unknown direction: $direction")
+                "down" -> depth += distance
+                "up" -> depth -= distance
+                else -> throw IllegalArgumentException("Unknown direction: $direction")
             }
 
         }
@@ -30,14 +32,14 @@ object Day2 {
         return horizontalPosition * depth
     }
 
-    fun part2(input: List<String>): Int {
+    override fun part2(): Int {
         var positionX = 0
         var depth = 0
         var aim = 0
 
         val regex = """^(?<direction>forward|down|up) (?<distance>\d+)$""".toRegex()
 
-        val modifiedInput = input.map {
+        val modifiedInput = inputAsList.map {
             val (a, b) = regex.find(it)?.destructured ?: error("Invalid line: $it")
             Pair(a, b.toInt())
         }
@@ -48,9 +50,10 @@ object Day2 {
                     positionX += distance
                     depth += aim * distance
                 }
-                "down"    -> aim += distance
-                "up"      -> aim -= distance
-                else      -> throw IllegalArgumentException("Unknown command: $direction")
+
+                "down" -> aim += distance
+                "up" -> aim -= distance
+                else -> throw IllegalArgumentException("Unknown command: $direction")
             }
         }
 

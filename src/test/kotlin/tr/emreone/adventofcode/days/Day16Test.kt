@@ -1,32 +1,30 @@
 package tr.emreone.adventofcode.days
 
-import tr.emreone.utils.FileLoader
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import tr.emreone.kotlin_utils.Resources
+import tr.emreone.kotlin_utils.automation.solve
 
 internal class Day16Test {
 
     @Test
-    fun part1() {
-        val input = FileLoader.readLines("src/test/resources", "day16_example.txt")
-        assertEquals(16, Day16.part1(input[0]), "Day16, Part1 - 1. Example should be 16.")
-        assertEquals(12, Day16.part1(input[1]), "Day16, Part1 - 2. Example should be 12.")
-        assertEquals(23, Day16.part1(input[2]), "Day16, Part1 - 3. Example should be 23.")
-        assertEquals(31, Day16.part1(input[3]), "Day16, Part1 - 4. Example should be 31.")
-    }
+    fun `execute_tests`() {
+        val lines = Resources.resourceAsList("day16_example.txt")
 
-    @Test
-    fun part2() {
-        val input = FileLoader.readLines("src/test/resources", "day16_example.txt")
+        solve<Day16>(false) {
+            lines[0] part1 16
+            lines[1] part1 12
+            lines[2] part1 23
+            lines[3] part1 31
 
-        assertEquals(3, Day16.part2(input[5]), "Day16, Part2 - 1. Example should be 1 + 2 = 3.")
-        assertEquals(54, Day16.part2(input[6]), "Day16, Part2 - 1. Example should be 6 * 9 = 54.")
-        assertEquals(7, Day16.part2(input[7]), "Day16, Part2 - 1. Example should be min(7, 8, 9) = 7.")
-        assertEquals(9, Day16.part2(input[8]), "Day16, Part2 - 1. Example should be max(7, 8, 9) = 9.")
-        assertEquals(1, Day16.part2(input[9]), "Day16, Part2 - 1. Example should be 5 < 15 --> 1 (true).")
-        assertEquals(0, Day16.part2(input[10]), "Day16, Part2 - 1. Example should be 5 > 15 --> 0 (false).")
-        assertEquals(0, Day16.part2(input[11]), "Day16, Part2 - 1. Example should be 5 == 15 --> 0 (false).")
-        assertEquals(1, Day16.part2(input[12]), "Day16, Part2 - 1. Example should be 1 + 3 == 2 * 2 --> 1 (true).")
+            lines[5] part2 3
+            lines[6] part2 54
+            lines[7] part2 7
+            lines[8] part2 9
+            lines[9] part2 1
+            lines[10] part2 0
+            lines[11] part2 0
+            lines[12] part2 1
+        }
     }
 
 }

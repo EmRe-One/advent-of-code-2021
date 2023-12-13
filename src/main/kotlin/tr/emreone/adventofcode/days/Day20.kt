@@ -1,11 +1,12 @@
 package tr.emreone.adventofcode.days
 
-import tr.emreone.utils.Logger.logger
-import tr.emreone.utils.extensions.Coords
-import tr.emreone.utils.extensions.times
+import tr.emreone.kotlin_utils.Logger.logger
+import tr.emreone.kotlin_utils.automation.Day
+import tr.emreone.kotlin_utils.extensions.times
+import tr.emreone.kotlin_utils.math.Coords
 
 
-object Day20 {
+class Day20 : Day(20, 2021, "Trench Map") {
 
     class ImageEnhancementAlgorithm(private val lookUpString: String) {
         private var minX: Int = 0
@@ -122,9 +123,9 @@ object Day20 {
         }
     }
 
-    fun part1(input: List<String>): Int {
-        val imageEnhancementAlgorithm = ImageEnhancementAlgorithm(input.first())
-        imageEnhancementAlgorithm.readImage(input.drop(2))
+    override fun part1(): Int {
+        val imageEnhancementAlgorithm = ImageEnhancementAlgorithm(inputAsList.first())
+        imageEnhancementAlgorithm.readImage(inputAsList.drop(2))
 
         imageEnhancementAlgorithm.drawImage()
         repeat(2) {
@@ -135,9 +136,9 @@ object Day20 {
         return imageEnhancementAlgorithm.lightPixels.size
     }
 
-    fun part2(input: List<String>): Int {
-        val imageEnhancementAlgorithm = ImageEnhancementAlgorithm(input.first())
-        imageEnhancementAlgorithm.readImage(input.drop(2))
+    override fun part2(): Int {
+        val imageEnhancementAlgorithm = ImageEnhancementAlgorithm(inputAsList.first())
+        imageEnhancementAlgorithm.readImage(inputAsList.drop(2))
         imageEnhancementAlgorithm.drawImage()
         repeat(50) {
             imageEnhancementAlgorithm.process()
@@ -145,4 +146,5 @@ object Day20 {
         imageEnhancementAlgorithm.drawImage()
         return imageEnhancementAlgorithm.lightPixels.size
     }
+
 }

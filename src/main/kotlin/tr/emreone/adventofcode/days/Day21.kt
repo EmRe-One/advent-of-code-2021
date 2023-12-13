@@ -1,8 +1,9 @@
 package tr.emreone.adventofcode.days
 
+import tr.emreone.kotlin_utils.automation.Day
 import kotlin.math.max
 
-object Day21 {
+class Day21 : Day(21, 2021, "Dirac Dice") {
 
     class DeterministicDice {
         var current = 0
@@ -32,11 +33,11 @@ object Day21 {
         }
     }
 
-    fun part1(input: List<String>): Int {
+    override fun part1(): Int {
         val dice = DeterministicDice()
         val pattern = """Player (\w+) starting position: (\w+)""".toRegex()
         val player = mutableListOf<Player>()
-        for(line in input) {
+        for (line in inputAsList) {
             val (id, position) = pattern.matchEntire(line)!!.destructured
             player.add(Player(id.toInt(), position.toInt()))
         }
@@ -61,9 +62,9 @@ object Day21 {
 
         var result = Pair(0L, 0L)
 
-        for(d1 in 1..3) {
-            for(d2 in 1..3) {
-                for(d3 in 1..3) {
+        for (d1 in 1..3) {
+            for (d2 in 1..3) {
+                for (d3 in 1..3) {
                     val newP1 = (position1 + d1 + d2 + d3 - 1) % 10 + 1
                     val newS1 = score1 + newP1
 
@@ -77,10 +78,10 @@ object Day21 {
         return result
     }
 
-    fun part2(input: List<String>): Long {
+    override fun part2(): Long {
         val pattern = """Player (\w+) starting position: (\w+)""".toRegex()
         val player = mutableListOf<Player>()
-        for(line in input) {
+        for (line in inputAsList) {
             val (id, position) = pattern.matchEntire(line)!!.destructured
             player.add(Player(id.toInt(), position.toInt()))
         }
@@ -89,4 +90,5 @@ object Day21 {
 
         return max(totalWins.first, totalWins.second)
     }
+
 }

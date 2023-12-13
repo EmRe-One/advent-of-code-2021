@@ -1,14 +1,13 @@
 package tr.emreone.adventofcode.days
 
-import tr.emreone.utils.Logger.logger
-import tr.emreone.utils.extensions.copy
-import tr.emreone.utils.extensions.times
+import tr.emreone.kotlin_utils.Logger.logger
+import tr.emreone.kotlin_utils.automation.Day
+import tr.emreone.kotlin_utils.extensions.copy
+import tr.emreone.kotlin_utils.extensions.times
 import java.util.*
 import kotlin.math.abs
 
-object Day23 {
-    const val SIGN_WALL = '#'
-    const val SIGN_EMPTY_CELL = '.'
+class Day23 : Day(23, 2021, "Amphipod") {
 
     /**
      * This class represents a burrow with a hallway and 4 rooms with a size of roomSize.
@@ -30,6 +29,149 @@ object Day23 {
      *
      */
     class Burrow {
+
+        companion object {
+            const val SIGN_WALL = '#'
+            const val SIGN_EMPTY_CELL = '.'
+
+            private val ENERGY_COST = mapOf(
+                'A' to 1,
+                'B' to 10,
+                'C' to 100,
+                'D' to 1000
+            )
+
+            private val ROOM_INDEX: MutableMap<Char, Int> = mutableMapOf()
+            private val TOTAL_ENERGY_FOR_STATES: MutableMap<String, MutableList<Pair<String, Long>>> = mutableMapOf()
+
+            fun parse(input: List<String>): Burrow {
+                val burrow = Burrow()
+
+                // read the hallway
+                input[1].forEach {
+                    if (it == SIGN_EMPTY_CELL) {
+                        burrow.hallway.add(it)
+                    }
+                }
+
+                // read the side rooms
+                val pattern = """(\w)+""".toRegex()
+                for (i in 2 until (input.size - 1)) {
+                    val rooms = pattern.findAll(input[i]).toList()
+                    for (roomNumber in rooms.indices) {
+                        val amphipod = rooms[roomNumber].value.first()
+                        if (!burrow.rooms.containsKey('A' + roomNumber)) {
+                            burrow.rooms['A' + roomNumber] = Stack()
+                            ROOM_INDEX['A' + roomNumber] = (roomNumber + 1) * 2
+                        }
+                        burrow.rooms['A' + roomNumber]!!.add(amphipod)
+                    }
+                    burrow.roomSize++
+                }
+
+                return burrow
+            }
+
+            fun calculateEnergy(burrow: Burrow): Long {
+                if (burrow.isCorrectSorted()) {
+                    burrow.sortHistory.add(burrow.getBurrowRepresentation() to 0)
+                    return 0L
+                }
+                if (TOTAL_ENERGY_FOR_STATES.containsKey(burrow.uniqueString())) {
+                    val cachedList = TOTAL_ENERGY_FOR_STATES[burrow.uniqueString()]!!
+                    burrow.sortHistory.copy(cachedList)
+                    return cachedList.lastOrNull()?.second ?: Long.MAX_VALUE
+                }
+
+                // if an amphipod can move to his correct room
+                burrow.hallway.forEachIndexed { hallwayIndex, cell ->
+                    if (burrow.rooms.containsKey(cell)
+                        && burrow.canMoveTo(cell)
+                        && burrow.pathIsClear(cell, hallwayIndex)
+                    ) {
+                        val lastEmptyIndex = burrow.getLastEmptyIndexInRoom(cell)
+                        assert(lastEmptyIndex != null) { "Room has no empty place." }
+
+                        val distance = lastEmptyIndex!! + 1 + abs(hallwayIndex - ROOM_INDEX[cell]!!)
+                        val energy = ENERGY_COST[cell]!! * distance
+
+                        val newBurrow = burrow.copy()
+
+                        newBurrow.hallway[hallwayIndex] = SIGN_EMPTY_CELL
+                        newBurrow.rooms[cell]!![lastEmptyIndex] = cell
+
+                        val cost = energy + calculateEnergy(newBurrow)
+
+                        return if (cost < 0) {
+                            // Long value overflow: ignoring this value
+                            Long.MAX_VALUE
+                        } else {
+                            newBurrow.sortHistory.add(burrow.getBurrowRepresentation() to cost)
+                            burrow.sortHistory.copy(newBurrow.sortHistory, true)
+                            cost
+                        }
+                    }
+                }
+
+                var minimalCost = Long.MAX_VALUE
+                val minimalCostHistory: MutableList<Pair<String, Long>> = mutableListOf()
+                minimalCostHistory.copy(burrow.sortHistory)
+
+                sideRoomsLoop@
+                for ((roomLabel: Char, roomMates: MutableList<Char>) in burrow.rooms) {
+                    if (!burrow.canMoveFrom(roomLabel)) {
+                        continue@sideRoomsLoop
+                    }
+
+                    val ki = burrow.getFirstOccupiedIndexInRoom(roomLabel) ?: continue@sideRoomsLoop
+
+                    val amphipodOnTop = roomMates[ki]
+
+                    hallwayLoop@
+                    for (hallwayIndex in 0 until burrow.hallway.size) {
+                        if (hallwayIndex in ROOM_INDEX.values) {
+                            // the position directly above the rooms are not allowed
+                            continue@hallwayLoop
+                        }
+                        if (burrow.hallway[hallwayIndex] != SIGN_EMPTY_CELL) {
+                            // if the hallway position is not empty we can't move
+                            continue@hallwayLoop
+                        }
+                        // amphipod go out of the room to all possible hallway positions
+                        if (burrow.pathIsClear(roomLabel, hallwayIndex)) {
+                            val dist = ki + 1 + abs(hallwayIndex - ROOM_INDEX[roomLabel]!!)
+                            val energy = ENERGY_COST[amphipodOnTop]!! * dist
+                            val newBurrow = burrow.copy()
+
+                            assert(newBurrow.hallway[hallwayIndex] == SIGN_EMPTY_CELL) {
+                                "Hallway position at $hallwayIndex not empty."
+                            }
+                            newBurrow.hallway[hallwayIndex] = amphipodOnTop
+
+                            assert(newBurrow.rooms[roomLabel]!![ki] == amphipodOnTop) {
+                                "Amphipod on top of the stack is not $amphipodOnTop."
+                            }
+                            newBurrow.rooms[roomLabel]!![ki] = SIGN_EMPTY_CELL
+
+                            val cost = energy + calculateEnergy(newBurrow)
+                            if (cost < 0) {
+                                // Long value overflow: ignoring this value
+                                Long.MAX_VALUE
+                            } else if (cost < minimalCost) {
+                                minimalCost = cost
+                                newBurrow.sortHistory.add(burrow.getBurrowRepresentation() to cost)
+                                minimalCostHistory.copy(newBurrow.sortHistory, true)
+                            }
+                        }
+                    }
+                }
+
+                TOTAL_ENERGY_FOR_STATES[burrow.uniqueString()] = minimalCostHistory
+                burrow.sortHistory.copy(minimalCostHistory, true)
+                return minimalCost
+            }
+        }
+
         var hallway: MutableList<Char> = mutableListOf()
         var roomSize: Int = 0
         val rooms: MutableMap<Char, MutableList<Char>> = mutableMapOf()
@@ -230,163 +372,25 @@ object Day23 {
             val minCost = this.sortHistory.last().second
 
             this.sortHistory.reversed().windowed(2).forEach { (pre, post) ->
-                logger.debug { "Sum of Energy:  " + String.format("%6d", minCost - pre.second)}
-                logger.debug { "Next Step need: " + String.format("%6d", pre.second - post.second)}
+                logger.debug { "Sum of Energy:  " + String.format("%6d", minCost - pre.second) }
+                logger.debug { "Next Step need: " + String.format("%6d", pre.second - post.second) }
                 logger.debug { pre.first }
             }
-            logger.debug { "Total Energy: " + String.format("%6d", minCost)}
+            logger.debug { "Total Energy: " + String.format("%6d", minCost) }
             logger.debug { this.sortHistory[0].first }
         }
 
-        companion object {
-            private val ENERGY_COST = mapOf(
-                'A' to 1,
-                'B' to 10,
-                'C' to 100,
-                'D' to 1000
-            )
-
-            private val ROOM_INDEX: MutableMap<Char, Int> = mutableMapOf()
-            private val TOTAL_ENERGY_FOR_STATES: MutableMap<String, MutableList<Pair<String, Long>>> = mutableMapOf()
-
-            fun parse(input: List<String>): Burrow {
-                val burrow = Burrow()
-
-                // read the hallway
-                input[1].forEach {
-                    if (it == SIGN_EMPTY_CELL) {
-                        burrow.hallway.add(it)
-                    }
-                }
-
-                // read the side rooms
-                val pattern = """(\w)+""".toRegex()
-                for (i in 2 until (input.size - 1)) {
-                    val rooms = pattern.findAll(input[i]).toList()
-                    for (roomNumber in rooms.indices) {
-                        val amphipod = rooms[roomNumber].value.first()
-                        if (!burrow.rooms.containsKey('A' + roomNumber)) {
-                            burrow.rooms['A' + roomNumber] = Stack()
-                            ROOM_INDEX['A' + roomNumber] = (roomNumber + 1) * 2
-                        }
-                        burrow.rooms['A' + roomNumber]!!.add(amphipod)
-                    }
-                    burrow.roomSize++
-                }
-
-                return burrow
-            }
-
-            fun calculateEnergy(burrow: Burrow): Long {
-                if (burrow.isCorrectSorted()) {
-                    burrow.sortHistory.add(burrow.getBurrowRepresentation() to 0)
-                    return 0L
-                }
-                if (TOTAL_ENERGY_FOR_STATES.containsKey(burrow.uniqueString())) {
-                    val cachedList = TOTAL_ENERGY_FOR_STATES[burrow.uniqueString()]!!
-                    burrow.sortHistory.copy(cachedList)
-                    return cachedList.lastOrNull()?.second ?: Long.MAX_VALUE
-                }
-
-                // if an amphipod can move to his correct room
-                burrow.hallway.forEachIndexed { hallwayIndex, cell ->
-                    if (burrow.rooms.containsKey(cell)
-                        && burrow.canMoveTo(cell)
-                        && burrow.pathIsClear(cell, hallwayIndex)
-                    ) {
-                        val lastEmptyIndex = burrow.getLastEmptyIndexInRoom(cell)
-                        assert(lastEmptyIndex != null) { "Room has no empty place." }
-
-                        val distance = lastEmptyIndex!! + 1 + abs(hallwayIndex - ROOM_INDEX[cell]!!)
-                        val energy = ENERGY_COST[cell]!! * distance
-
-                        val newBurrow = burrow.copy()
-
-                        newBurrow.hallway[hallwayIndex] = SIGN_EMPTY_CELL
-                        newBurrow.rooms[cell]!![lastEmptyIndex] = cell
-
-                        val cost = energy + calculateEnergy(newBurrow)
-
-                        return if (cost < 0) {
-                            // Long value overflow: ignoring this value
-                            Long.MAX_VALUE
-                        } else {
-                            newBurrow.sortHistory.add(burrow.getBurrowRepresentation() to cost)
-                            burrow.sortHistory.copy(newBurrow.sortHistory, true)
-                            cost
-                        }
-                    }
-                }
-
-                var minimalCost = Long.MAX_VALUE
-                val minimalCostHistory: MutableList<Pair<String, Long>> = mutableListOf()
-                minimalCostHistory.copy(burrow.sortHistory)
-
-                sideRoomsLoop@
-                for ((roomLabel: Char, roomMates: MutableList<Char>) in burrow.rooms) {
-                    if (!burrow.canMoveFrom(roomLabel)) {
-                        continue@sideRoomsLoop
-                    }
-
-                    val ki = burrow.getFirstOccupiedIndexInRoom(roomLabel) ?: continue@sideRoomsLoop
-
-                    val amphipodOnTop = roomMates[ki]
-
-                    hallwayLoop@
-                    for (hallwayIndex in 0 until burrow.hallway.size) {
-                        if (hallwayIndex in ROOM_INDEX.values) {
-                            // the position directly above the rooms are not allowed
-                            continue@hallwayLoop
-                        }
-                        if (burrow.hallway[hallwayIndex] != SIGN_EMPTY_CELL) {
-                            // if the hallway position is not empty we can't move
-                            continue@hallwayLoop
-                        }
-                        // amphipod go out of the room to all possible hallway positions
-                        if (burrow.pathIsClear(roomLabel, hallwayIndex)) {
-                            val dist = ki + 1 + abs(hallwayIndex - ROOM_INDEX[roomLabel]!!)
-                            val energy = ENERGY_COST[amphipodOnTop]!! * dist
-                            val newBurrow = burrow.copy()
-
-                            assert(newBurrow.hallway[hallwayIndex] == SIGN_EMPTY_CELL) {
-                                "Hallway position at $hallwayIndex not empty."
-                            }
-                            newBurrow.hallway[hallwayIndex] = amphipodOnTop
-
-                            assert(newBurrow.rooms[roomLabel]!![ki] == amphipodOnTop) {
-                                "Amphipod on top of the stack is not $amphipodOnTop."
-                            }
-                            newBurrow.rooms[roomLabel]!![ki] = SIGN_EMPTY_CELL
-
-                            val cost = energy + calculateEnergy(newBurrow)
-                            if (cost < 0) {
-                                // Long value overflow: ignoring this value
-                                Long.MAX_VALUE
-                            } else if (cost < minimalCost) {
-                                minimalCost = cost
-                                newBurrow.sortHistory.add(burrow.getBurrowRepresentation() to cost)
-                                minimalCostHistory.copy(newBurrow.sortHistory, true)
-                            }
-                        }
-                    }
-                }
-
-                TOTAL_ENERGY_FOR_STATES[burrow.uniqueString()] = minimalCostHistory
-                burrow.sortHistory.copy(minimalCostHistory, true)
-                return minimalCost
-            }
-        }
     }
 
-    fun part1(input: List<String>): Long {
-        val burrow = Burrow.parse(input)
+    override fun part1(): Long {
+        val burrow = Burrow.parse(inputAsList)
         val minCost = Burrow.calculateEnergy(burrow)
         burrow.printSortHistory()
         return minCost
     }
 
-    fun part2(input: List<String>): Long {
-        val extendedInput = input.toMutableList().also {
+    override fun part2(): Long {
+        val extendedInput = inputAsList.toMutableList().also {
             it.add(3, "#D#C#B#A#")
             it.add(4, "#D#B#A#C#")
         }
@@ -396,4 +400,5 @@ object Day23 {
         burrow.printSortHistory()
         return minCost
     }
+
 }

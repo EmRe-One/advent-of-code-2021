@@ -1,8 +1,9 @@
 package tr.emreone.adventofcode.days
 
+import tr.emreone.kotlin_utils.automation.Day
 import java.math.BigInteger
 
-object Day16 {
+class Day16 : Day(16, 2021, "Packet Decoder") {
 
     class BITSPacket(val bitMessage: String) {
         private val packetVersion: Int
@@ -23,6 +24,7 @@ object Day16 {
                 4 -> { // literal value
                     parseLiteralValue()
                 }
+
                 else -> { // operator
                     val lengthTypeId = bitMessage.substring(parsingIndex, parsingIndex + 1).toInt()
                     parsingIndex += 1
@@ -106,6 +108,7 @@ object Day16 {
                     }
                     sum
                 }
+
                 1 -> { // product of childs
                     var product = 1L
                     for (child in children) {
@@ -113,24 +116,31 @@ object Day16 {
                     }
                     product
                 }
+
                 2 -> { // min of
-                    this.children.map { it.evaluate() }.minOf{ it }
+                    this.children.map { it.evaluate() }.minOf { it }
                 }
+
                 3 -> { // max of
-                    this.children.map { it.evaluate() }.maxOf{ it }
+                    this.children.map { it.evaluate() }.maxOf { it }
                 }
+
                 4 -> { // return literal value
                     this.literalValue!!.toLong()
                 }
+
                 5 -> { // greater than
                     if (this.children[0].evaluate() > this.children[1].evaluate()) 1L else 0L
                 }
+
                 6 -> { // less than
                     if (this.children[0].evaluate() < this.children[1].evaluate()) 1L else 0L
                 }
+
                 7 -> { // equal to
                     if (this.children[0].evaluate() == this.children[1].evaluate()) 1L else 0L
                 }
+
                 else -> {
                     throw IllegalArgumentException("Unknown packet type ID: ${this.packetTypeId}")
                 }
@@ -138,22 +148,29 @@ object Day16 {
         }
     }
 
-    fun part1(hexMessage: String): Int {
+    override fun part1(): Int {
+        val hexMessage = inputAsString
+
         val hexLength = hexMessage.length
-        val bitMessage = hexMessage.toBigInteger(16)
+        val bitMessage = hexMessage
+            .toBigInteger(16)
             .toString(2)
             .padStart(4 * hexLength, '0')
 
         return BITSPacket(bitMessage).getSumOfVersions()
     }
 
-    fun part2(hexMessage: String): Long {
+    override fun part2(): Long {
+        val hexMessage = inputAsString
+
         val hexLength = hexMessage.length
-        val bitMessage = hexMessage.toBigInteger(16)
+        val bitMessage = hexMessage
+            .toBigInteger(16)
             .toString(2)
             .padStart(4 * hexLength, '0')
 
         val parentBitsPacket = BITSPacket(bitMessage)
         return parentBitsPacket.evaluate()
     }
+
 }

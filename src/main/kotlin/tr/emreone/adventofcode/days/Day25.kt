@@ -1,12 +1,13 @@
 package tr.emreone.adventofcode.days
 
-import tr.emreone.utils.Logger.logger
-import tr.emreone.utils.math.Point2D
+import tr.emreone.kotlin_utils.Logger.logger
+import tr.emreone.kotlin_utils.automation.Day
+import tr.emreone.kotlin_utils.math.Point2D
 
-object Day25 {
+class Day25 : Day(25, 2021, "Sea Cucumber") {
 
     class SeaCucumber(input: List<String>) {
-        private val width  = input.first().length
+        private val width = input.first().length
         private val height = input.size
         private val region = input.flatMapIndexed { y: Int, line: String ->
             line.mapIndexed { x: Int, c: Char ->
@@ -72,7 +73,7 @@ object Day25 {
         private fun printSeaCucumber(seaCucumber: Map<Point2D, Char>) {
             val output = buildString {
                 appendLine()
-                for(y in 0 until height) {
+                for (y in 0 until height) {
                     for (x in 0 until width) {
                         append(seaCucumber[Point2D(x.toLong(), y.toLong())] ?: SIGN_EMPTY)
                     }
@@ -83,19 +84,15 @@ object Day25 {
         }
 
         companion object {
-            const val SIGN_EMPTY  = '.'
-            const val SIGN_EAST   = '>'
-            const val SIGN_SOUTH  = 'v'
+            const val SIGN_EMPTY = '.'
+            const val SIGN_EAST = '>'
+            const val SIGN_SOUTH = 'v'
         }
     }
 
-    fun part1(input: List<String>): Int {
-        val seaCucumber = SeaCucumber(input)
+    override fun part1(): Int {
+        val seaCucumber = SeaCucumber(inputAsList)
         return seaCucumber.countStepsToStopMoving()
     }
 
-    fun part2(input: List<String>): Int {
-
-        return 0
-    }
 }

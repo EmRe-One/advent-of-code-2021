@@ -6,4 +6,5 @@ build
 
 *.iml
 
-keys.properties
+puzzles
+src/main/**/*.txt

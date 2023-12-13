@@ -1,14 +1,16 @@
 package tr.emreone.adventofcode.days
 
-object Day3 {
+import tr.emreone.kotlin_utils.automation.Day
 
-    fun part1(list: List<String>): Int {
-        val inputLength = list[0].length
+class Day03 : Day(3, 2021, "Binary Diagnostic") {
+
+    override fun part1(): Int {
+        val inputLength = inputAsList[0].length
 
         val result = arrayOfNulls<String>(inputLength)
 
-        for(i in 0 until inputLength) {
-            val (onesAtI, zerosAtI) = list.partition { it[i] == '1' }
+        for (i in 0 until inputLength) {
+            val (onesAtI, zerosAtI) = inputAsList.partition { it[i] == '1' }
 
             result[i] = if (onesAtI.size >= zerosAtI.size) "1" else "0"
         }
@@ -19,23 +21,23 @@ object Day3 {
         return gamma * epsilon
     }
 
-    fun part2(list: List<String>): Int {
-        var oxygenGeneratorList: List<String> = list
+    override fun part2(): Int {
+        var oxygenGeneratorList: List<String> = inputAsList
         var i = 0
         while (oxygenGeneratorList.size > 1) {
             val (onesAtI, zerosAtI) = oxygenGeneratorList.partition { it[i] == '1' }
 
-            oxygenGeneratorList = if ( onesAtI.size >= zerosAtI.size) onesAtI else zerosAtI
+            oxygenGeneratorList = if (onesAtI.size >= zerosAtI.size) onesAtI else zerosAtI
 
             if (oxygenGeneratorList.size == 1) break else i++
         }
 
-        var co2ScrubberRatingList: List<String> = list
+        var co2ScrubberRatingList: List<String> = inputAsList
         i = 0
         while (co2ScrubberRatingList.size > 1) {
             val (onesAtI, zerosAtI) = co2ScrubberRatingList.partition { it[i] == '1' }
 
-            co2ScrubberRatingList = if ( zerosAtI.size <= onesAtI.size) zerosAtI else onesAtI
+            co2ScrubberRatingList = if (zerosAtI.size <= onesAtI.size) zerosAtI else onesAtI
 
             if (co2ScrubberRatingList.size == 1) break else i++
         }

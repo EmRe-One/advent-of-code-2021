@@ -1,12 +1,13 @@
 package tr.emreone.adventofcode.days
 
-import tr.emreone.utils.Logger.logger
-import tr.emreone.utils.extensions.Coords
-import java.util.PriorityQueue
+import tr.emreone.kotlin_utils.Logger.logger
+import tr.emreone.kotlin_utils.automation.Day
+import tr.emreone.kotlin_utils.math.Coords
+import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
-object Day15 {
+class Day15 : Day(15, 2021, "Chiton") {
 
     class Traversal(val location: Coords, val totalRisk: Int, val totalPath: List<Coords>) : Comparable<Traversal> {
         override fun compareTo(other: Traversal): Int =
@@ -37,9 +38,12 @@ object Day15 {
                     this.getNeighbors(currentTraversal.location).filter {
                         it.first in 0..destination.first && it.second in 0..destination.second
                     }.forEach {
-                        toBeEvaluated.offer(Traversal(it,
-                            currentTraversal.totalRisk + this.get(it),
-                            currentTraversal.totalPath + it)
+                        toBeEvaluated.offer(
+                            Traversal(
+                                it,
+                                currentTraversal.totalRisk + this.get(it),
+                                currentTraversal.totalPath + it
+                            )
                         )
                     }
                 }
@@ -82,12 +86,14 @@ object Day15 {
         }
     }
 
-    fun part1(input: List<String>): Int {
-        val grid = input.mapIndexed { _, line ->
-            line.mapIndexed { _, c ->
-                c.digitToInt()
-            }.toIntArray()
-        }.toTypedArray()
+    override fun part1(): Int {
+        val grid = inputAsList
+            .mapIndexed { _, line ->
+                line.mapIndexed { _, c ->
+                    c.digitToInt()
+                }.toIntArray()
+            }
+            .toTypedArray()
 
         val cavern = Cavern(grid)
         val start = Coords(0, 0)
@@ -99,15 +105,17 @@ object Day15 {
         return traversal.totalRisk
     }
 
-    fun part2(input: List<String>): Int {
+    override fun part2(): Int {
         val repeatX = 5
         val repeatY = 5
 
-        val grid = input.mapIndexed { _, line ->
-            line.mapIndexed { _, c ->
-                c.digitToInt()
-            }.toIntArray()
-        }.toTypedArray()
+        val grid = inputAsList
+            .mapIndexed { _, line ->
+                line.mapIndexed { _, c ->
+                    c.digitToInt()
+                }.toIntArray()
+            }
+            .toTypedArray()
 
         val width = grid[0].size
         val height = grid.size
@@ -118,8 +126,8 @@ object Day15 {
             for (x in 0 until width) {
                 val riskLevel = grid[y][x]
 
-                for(yIter in 0 until repeatY) {
-                    for(xIter in 0 until repeatX) {
+                for (yIter in 0 until repeatY) {
+                    for (xIter in 0 until repeatX) {
                         val newValue = riskLevel + yIter + xIter
                         fullMap[yIter * height + y][xIter * width + x] = if (newValue > 9) {
                             newValue - (newValue / 9) * 9
@@ -132,7 +140,7 @@ object Day15 {
         }
 
         val cavern = Cavern(fullMap)
-        var start = Coords(0, 0)
+        val start = Coords(0, 0)
         val destination = Coords(cavern.width - 1, cavern.height - 1)
 
         val traversal = cavern.traverse(start, destination)
@@ -140,4 +148,5 @@ object Day15 {
 
         return traversal.totalRisk
     }
+
 }

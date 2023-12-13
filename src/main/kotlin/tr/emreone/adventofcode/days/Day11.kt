@@ -1,6 +1,8 @@
 package tr.emreone.adventofcode.days
 
-object Day11 {
+import tr.emreone.kotlin_utils.automation.Day
+
+class Day11 : Day(11, 2021, "Dumbo Octopus") {
 
     class Octopus(var energyLevel: Int = 0) {
         var isFlashing = false
@@ -122,8 +124,8 @@ object Day11 {
         }
     }
 
-    fun part1(input: List<String>): Int {
-        val field = OctopusField(input)
+    override fun part1(): Int {
+        val field = OctopusField(inputAsList)
         var sumOfFlashes = 0
         repeat(100) {
             sumOfFlashes += field.stepForward()
@@ -131,8 +133,8 @@ object Day11 {
         return sumOfFlashes
     }
 
-    fun part2(input: List<String>): Int {
-        val field = OctopusField(input)
+    override fun part2(): Int {
+        val field = OctopusField(inputAsList)
         while (true) {
             val totalSum = field.grid.sumOf {
                 it.sumOf { octopus ->
@@ -147,4 +149,5 @@ object Day11 {
         }
         return field.currentStep
     }
+
 }

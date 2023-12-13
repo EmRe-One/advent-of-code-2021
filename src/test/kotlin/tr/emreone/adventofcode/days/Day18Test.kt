@@ -1,21 +1,17 @@
 package tr.emreone.adventofcode.days
 
-import tr.emreone.utils.FileLoader
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import tr.emreone.kotlin_utils.Resources
+import tr.emreone.kotlin_utils.automation.solve
 
 internal class Day18Test {
 
     @Test
-    fun part1() {
-        val input = FileLoader.readLines("src/test/resources", "day18_example.txt")
-        assertEquals(4140, Day18.part1(input), "Day18, Part1 should be 4140.")
-    }
-
-    @Test
-    fun part2() {
-        val input = FileLoader.readLines("src/test/resources", "day18_example.txt")
-        assertEquals(3993, Day18.part2(input), "Day18, Part2 should be 3993.")
+    fun `execute_tests`() {
+        solve<Day18>(false) {
+            Resources.resourceAsList("day18_example.txt")
+                .joinToString("\n") part1 4140 part2 3993
+        }
     }
 
 }

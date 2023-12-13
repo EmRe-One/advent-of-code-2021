@@ -1,9 +1,11 @@
 package tr.emreone.adventofcode.days
 
-import tr.emreone.utils.Logger.logger
-import tr.emreone.utils.extensions.Coords
+import tr.emreone.kotlin_utils.Logger.logger
+import tr.emreone.kotlin_utils.automation.Day
+import tr.emreone.kotlin_utils.math.Coords
 
-object Day13 {
+
+class Day13 : Day(13, 2021, "Transparent Origami") {
 
     class TransparentPaper(val input: List<String>) {
         val coordsSet = mutableSetOf<Coords>()
@@ -31,8 +33,7 @@ object Day13 {
                         val coords = Coords(x, y)
                         if (coordsSet.contains(coords)) {
                             append("x")
-                        }
-                        else {
+                        } else {
                             append(" ")
                         }
                     }
@@ -71,16 +72,16 @@ object Day13 {
         }
     }
 
-    fun part1(input: List<String>): Int {
-        val indexOfEmptyLine = input.indexOf("")
-        val coordsInput = input.subList(0, indexOfEmptyLine)
-        val instructionsInput = input.subList(indexOfEmptyLine + 1, input.size)
+    override fun part1(): Int {
+        val indexOfEmptyLine = inputAsList.indexOf("")
+        val coordsInput = inputAsList.subList(0, indexOfEmptyLine)
+        val instructionsInput = inputAsList.subList(indexOfEmptyLine + 1, inputAsList.size)
 
         val transparentPaper = TransparentPaper(coordsInput)
 
         val pattern = """fold along (\w+)=(\d+)""".toRegex()
         val (axis, index) = pattern.matchEntire(instructionsInput.first())!!.destructured
-        when(axis) {
+        when (axis) {
             "x" -> transparentPaper.foldGridAtX(index.toInt())
             "y" -> transparentPaper.foldGridAtY(index.toInt())
         }
@@ -88,17 +89,17 @@ object Day13 {
         return transparentPaper.coordsSet.size
     }
 
-    fun part2(input: List<String>): String {
-        val indexOfEmptyLine = input.indexOf("")
-        val coordsInput = input.subList(0, indexOfEmptyLine)
-        val instructionsInput = input.subList(indexOfEmptyLine + 1, input.size)
+    override fun part2(): String {
+        val indexOfEmptyLine = inputAsList.indexOf("")
+        val coordsInput = inputAsList.subList(0, indexOfEmptyLine)
+        val instructionsInput = inputAsList.subList(indexOfEmptyLine + 1, inputAsList.size)
 
         val transparentPaper = TransparentPaper(coordsInput)
 
         val pattern = """fold along (\w+)=(\d+)""".toRegex()
-        for(instruction in instructionsInput) {
+        for (instruction in instructionsInput) {
             val (axis, index) = pattern.matchEntire(instruction)!!.destructured
-            when(axis) {
+            when (axis) {
                 "x" -> transparentPaper.foldGridAtX(index.toInt())
                 "y" -> transparentPaper.foldGridAtY(index.toInt())
             }
@@ -109,4 +110,5 @@ object Day13 {
 
         return "BCZRCEAB"
     }
+
 }

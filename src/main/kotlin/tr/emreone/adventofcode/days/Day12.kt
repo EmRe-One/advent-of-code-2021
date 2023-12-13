@@ -1,8 +1,10 @@
 package tr.emreone.adventofcode.days
 
-import tr.emreone.utils.Logger.logger
+import tr.emreone.kotlin_utils.Logger.logger
+import tr.emreone.kotlin_utils.automation.Day
 
-object Day12 {
+
+class Day12 : Day(12, 2021, "Passage Pathing") {
 
     class Cave(var name: String) {
         val neighbors = mutableSetOf<Cave>()
@@ -124,19 +126,20 @@ object Day12 {
 
     }
 
-    fun part1(input: List<String>): Int {
+    override fun part1(): Int {
         val caveSystem = CaveSystem()
-        input.forEach {
+        inputAsList.forEach {
             caveSystem.addConnection(it)
         }
         return caveSystem.getNumberOfPossiblePathesWithFirstRule()
     }
 
-    fun part2(input: List<String>): Int {
+    override fun part2(): Int {
         val caveSystem = CaveSystem()
-        input.forEach {
+        inputAsList.forEach {
             caveSystem.addConnection(it)
         }
         return caveSystem.getNumberOfPossiblePathesWithSecondRule()
     }
+
 }

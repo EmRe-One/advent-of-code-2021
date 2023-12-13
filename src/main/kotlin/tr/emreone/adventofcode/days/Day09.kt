@@ -1,8 +1,9 @@
 package tr.emreone.adventofcode.days
 
-import tr.emreone.utils.extensions.Coords
+import tr.emreone.kotlin_utils.automation.Day
+import tr.emreone.kotlin_utils.math.Coords
 
-object Day9 {
+class Day09 : Day(9, 2021, "Smoke Basin") {
 
     class Grid(var input: List<String>) {
         private val grid = mutableMapOf<Coords, Int>()
@@ -85,15 +86,15 @@ object Day9 {
         }
     }
 
-    fun part1(input: List<String>): Int {
-        val grid = Grid(input)
+    override fun part1(): Int {
+        val grid = Grid(inputAsList)
         return grid.getLowPoints().sumOf {
             it.second + 1
         }
     }
 
-    fun part2(input: List<String>): Int {
-        val grid = Grid(input)
+    override fun part2(): Int {
+        val grid = Grid(inputAsList)
         val basins = grid.getBasins()
 
         val sortedBasins = basins.sortedByDescending {
@@ -102,4 +103,5 @@ object Day9 {
 
         return sortedBasins[0].size * sortedBasins[1].size * sortedBasins[2].size
     }
+
 }

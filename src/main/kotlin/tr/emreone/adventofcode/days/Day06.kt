@@ -1,6 +1,8 @@
 package tr.emreone.adventofcode.days
 
-object Day6 {
+import tr.emreone.kotlin_utils.automation.Day
+
+class Day06 : Day(6, 2021, "Lanternfish") {
 
     fun countAllFishesAfterDays(input: String, days: Int): Long {
         val fishes = input.split(",")
@@ -9,12 +11,12 @@ object Day6 {
 
         val fishDistribution = LongArray(9)
 
-        for(f in fishes) {
+        for (f in fishes) {
             fishDistribution[f.key] = f.value.toLong()
         }
 
         var temp: Long
-        for(i in 0 until days) {
+        for (i in 0 until days) {
             temp = fishDistribution[0]
             fishDistribution[0] = fishDistribution[1]
             fishDistribution[1] = fishDistribution[2]
@@ -28,6 +30,14 @@ object Day6 {
         }
 
         return fishDistribution.sumOf { it }
+    }
+
+    override fun part1(): Long {
+        return countAllFishesAfterDays(inputAsString, 80)
+    }
+
+    override fun part2(): Long {
+        return countAllFishesAfterDays(inputAsString, 256)
     }
 
 }

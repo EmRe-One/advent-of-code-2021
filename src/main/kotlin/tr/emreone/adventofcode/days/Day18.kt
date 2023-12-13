@@ -1,9 +1,10 @@
 package tr.emreone.adventofcode.days
 
+import tr.emreone.kotlin_utils.automation.Day
 import kotlin.math.ceil
 import kotlin.math.floor
 
-object Day18 {
+class Day18 : Day(18, 2021, "Snailfish") {
 
     class SnailfishNumber {
         var parent: SnailfishNumber? = null
@@ -49,7 +50,7 @@ object Day18 {
 
             if (parent?.x != null) {
                 var result = parent.x
-                while(result != null && result.regularNumber == null) {
+                while (result != null && result.regularNumber == null) {
                     result = result.y
                 }
                 return result
@@ -68,7 +69,7 @@ object Day18 {
 
             if (parent?.y != null) {
                 var result = parent.y
-                while(result != null && result.regularNumber == null) {
+                while (result != null && result.regularNumber == null) {
                     result = result.x
                 }
                 return result
@@ -86,7 +87,7 @@ object Day18 {
         }
 
         fun reduceAll() {
-            while(reduce()) {
+            while (reduce()) {
                 // do nothing
             }
         }
@@ -206,28 +207,28 @@ object Day18 {
         }
     }
 
-    fun part1(input: List<String>): Int {
-        var sum = SnailfishNumber.parse(input.first())
+    override fun part1(): Int {
+        var sum = SnailfishNumber.parse(inputAsList.first())
 
-        for(i in 1 until input.size) {
-            sum = sum + SnailfishNumber.parse(input[i])
+        for (i in 1 until inputAsList.size) {
+            sum = sum + SnailfishNumber.parse(inputAsList[i])
             sum.reduceAll()
         }
 
         return sum.getMagnitude()
     }
 
-    fun part2(input: List<String>): Int {
+    override fun part2(): Int {
         val possibleMagnitudes = mutableListOf<Int>()
-        val numberOfSnailfishNumbers = input.size
+        val numberOfSnailfishNumbers = inputAsList.size
 
-        for(first in 0 until numberOfSnailfishNumbers - 1) {
-            for(second in first + 1 until numberOfSnailfishNumbers) {
-                val sum1 = SnailfishNumber.parse(input[first]) + SnailfishNumber.parse(input[second])
+        for (first in 0 until numberOfSnailfishNumbers - 1) {
+            for (second in first + 1 until numberOfSnailfishNumbers) {
+                val sum1 = SnailfishNumber.parse(inputAsList[first]) + SnailfishNumber.parse(inputAsList[second])
                 sum1.reduceAll()
                 possibleMagnitudes.add(sum1.getMagnitude())
 
-                val sum2 = SnailfishNumber.parse(input[second]) + SnailfishNumber.parse(input[first])
+                val sum2 = SnailfishNumber.parse(inputAsList[second]) + SnailfishNumber.parse(inputAsList[first])
                 sum2.reduceAll()
                 possibleMagnitudes.add(sum2.getMagnitude())
             }
@@ -235,4 +236,5 @@ object Day18 {
 
         return possibleMagnitudes.maxOf { it }
     }
+
 }

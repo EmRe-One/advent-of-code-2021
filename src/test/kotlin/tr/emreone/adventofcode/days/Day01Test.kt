@@ -4,13 +4,13 @@ import org.junit.jupiter.api.Test
 import tr.emreone.kotlin_utils.Resources
 import tr.emreone.kotlin_utils.automation.solve
 
-internal class Day23Test {
+internal class Day01Test {
 
     @Test
     fun `execute_tests`() {
-        solve<Day23>(false) {
-            Resources.resourceAsList("day23_example.txt")
-                .joinToString("\n") part1 12_521 part2 44_169
+        solve<Day01>(false) {
+            Resources.resourceAsList("day01_example.txt")
+                .joinToString("\n") part1 7 part2 5
         }
     }
 

@@ -1,6 +1,8 @@
 package tr.emreone.adventofcode.days
 
-object Day24 {
+import tr.emreone.kotlin_utils.automation.Day
+
+class Day24 : Day(24, 2021, "Arithmetic Logic Unit") {
 
     class Parameters(val a: Int, val b: Int)
     class QueueItem(val digitIndex: Int, val addend: Int)
@@ -64,13 +66,14 @@ object Day24 {
         }
     }
 
-    fun part1(input: List<String>): Long {
-        val alu = ALU(input)
+    override fun part1(): Long {
+        val alu = ALU(inputAsList)
         return alu.findModelNumber()
     }
 
-    fun part2(input: List<String>): Long {
-        val alu = ALU(input)
+    override fun part2(): Long {
+        val alu = ALU(inputAsList)
         return alu.findModelNumber(largest = false)
     }
+
 }

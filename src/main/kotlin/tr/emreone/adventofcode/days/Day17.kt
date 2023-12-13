@@ -1,11 +1,12 @@
 package tr.emreone.adventofcode.days
 
-import tr.emreone.utils.Logger.logger
+import tr.emreone.kotlin_utils.Logger.logger
+import tr.emreone.kotlin_utils.automation.Day
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
-object Day17 {
+class Day17 : Day(17, 2021, "Trick Shot") {
 
     class Trajectory(val initialVelocity: Pair<Int, Int>, targetArea: TargetArea) {
         private val points = mutableListOf<Pair<Int, Int>>()
@@ -115,9 +116,9 @@ object Day17 {
         }
     }
 
-    fun part1(targetArea: String): Int {
+    override fun part1(): Int {
         val pattern = """target area: x=(-?\d+)..(-?\d+), y=(-?\d+)..(-?\d+)""".toRegex()
-        val (xStart, xEnd, yStart, yEnd) = pattern.matchEntire(targetArea)!!.destructured
+        val (xStart, xEnd, yStart, yEnd) = pattern.matchEntire(inputAsString)!!.destructured
 
         val target = TargetArea(xStart.toInt()..xEnd.toInt(), yStart.toInt()..yEnd.toInt())
         target.calcTrajectories()
@@ -131,13 +132,14 @@ object Day17 {
         return trajectory.getHighestPoint()
     }
 
-    fun part2(targetArea: String): Int {
+    override fun part2(): Int {
         val pattern = """target area: x=(-?\d+)..(-?\d+), y=(-?\d+)..(-?\d+)""".toRegex()
-        val (xStart, xEnd, yStart, yEnd) = pattern.matchEntire(targetArea)!!.destructured
+        val (xStart, xEnd, yStart, yEnd) = pattern.matchEntire(inputAsString)!!.destructured
 
         val target = TargetArea(xStart.toInt()..xEnd.toInt(), yStart.toInt()..yEnd.toInt())
         target.calcTrajectories()
 
         return target.possibleInitialVelocities.size
     }
+
 }

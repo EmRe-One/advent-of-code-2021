@@ -1,6 +1,8 @@
 package tr.emreone.adventofcode.days
 
-object Day8 {
+import tr.emreone.kotlin_utils.automation.Day
+
+class Day08 : Day(8, 2021, "Seven Segment Search") {
 
     /**
      *  00aa
@@ -96,10 +98,10 @@ object Day8 {
         }
 
         fun decode() {
-            val t1 =  this.inputs.first { it.numberOfActivatedSegments() == 2 } // -> 1
-            val t2 =  this.inputs.first { it.numberOfActivatedSegments() == 3 } // -> 7
-            val t3 =  this.inputs.first { it.numberOfActivatedSegments() == 4 } // -> 4
-            val t4 =  this.inputs.first { it.numberOfActivatedSegments() == 7 } // -> 8
+            val t1 = this.inputs.first { it.numberOfActivatedSegments() == 2 } // -> 1
+            val t2 = this.inputs.first { it.numberOfActivatedSegments() == 3 } // -> 7
+            val t3 = this.inputs.first { it.numberOfActivatedSegments() == 4 } // -> 4
+            val t4 = this.inputs.first { it.numberOfActivatedSegments() == 7 } // -> 8
 
             // 0x7F -> 0111 1111 -> all segments light up
             var t5 = SevenSegmentDigit(0x7F)
@@ -117,7 +119,7 @@ object Day8 {
             val s4 = t3 and t5
             val s5 = t4.without(t3).without(t5)
             val s6 = t6.without(t5).without(s2)
-            val s7 = t4.without( s1 or s2 or s3 or s4 or s5 or s6)
+            val s7 = t4.without(s1 or s2 or s3 or s4 or s5 or s6)
 
             decoding[s1 or s2 or s3 or s5 or s6 or s7] = 0
             decoding[s3 or s6] = 1
@@ -133,8 +135,8 @@ object Day8 {
 
     }
 
-    fun part1(input: List<String>): Int {
-        return input.map {
+    override fun part1(): Int {
+        return inputAsList.map {
             Entry.parse(it).outputs
         }.sumOf {
             it.filter { segment ->
@@ -146,8 +148,8 @@ object Day8 {
         }
     }
 
-    fun part2(input: List<String>): Int {
-        return input.sumOf { line ->
+    override fun part2(): Int {
+        return inputAsList.sumOf { line ->
             val entry = Entry.parse(line)
 
             entry.decode()

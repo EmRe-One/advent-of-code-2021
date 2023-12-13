@@ -1,12 +1,14 @@
 package tr.emreone.adventofcode.days
 
-import tr.emreone.utils.Logger.logger
+import tr.emreone.kotlin_utils.Logger.logger
+import tr.emreone.kotlin_utils.automation.Day
 
-object Day14 {
 
-    fun part1(input: List<String>): Int {
-        val template = input.first()
-        val rules = input.drop(2).associate {
+class Day14 : Day(14, 2021, "Extended Polymerization") {
+
+    override fun part1(): Int {
+        val template = inputAsList.first()
+        val rules = inputAsList.drop(2).associate {
             val (pattern, result) = it.split(" -> ")
             pattern to result
         }
@@ -31,11 +33,11 @@ object Day14 {
         return countElements.maxOf { it.value } - countElements.minOf { it.value }
     }
 
-    fun part2(input: List<String>): Long {
-        val template = input.first()
+    override fun part2(): Long {
+        val template = inputAsList.first()
         val lastPolymer = template.last()
 
-        val rules = input.drop(2).map {
+        val rules = inputAsList.drop(2).map {
             val (pattern, result) = it.split(" -> ")
             pattern to result
         }.toMap()
@@ -70,4 +72,5 @@ object Day14 {
 
         return countingElements.maxOf { it.value } - countingElements.minOf { it.value }
     }
+
 }

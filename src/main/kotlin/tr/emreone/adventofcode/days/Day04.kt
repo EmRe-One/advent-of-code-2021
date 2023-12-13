@@ -1,6 +1,8 @@
 package tr.emreone.adventofcode.days
 
-object Day4 {
+import tr.emreone.kotlin_utils.automation.Day
+
+class Day04 : Day(4, 2021, "Giant Squid") {
 
     class Field(var value: Int) {
         var isMarked = false
@@ -49,8 +51,8 @@ object Day4 {
         }
 
         fun mark(d: Int) {
-            outer@ for(row in 0..4) {
-                inner@ for(f in 0 .. 4) {
+            outer@ for (row in 0..4) {
+                inner@ for (f in 0..4) {
                     if (fields[row][f].value == d) {
                         fields[row][f].isMarked = true
                         break@outer
@@ -71,10 +73,10 @@ object Day4 {
         }
     }
 
-    fun part1(list: List<String>): Int {
-        val drawingNumbers = list[0].split(",").map { it.toInt() }
+    override fun part1(): Int {
+        val drawingNumbers = inputAsList[0].split(",").map { it.toInt() }
 
-        val boards = list.subList(1, list.size).windowed(6, 6) {
+        val boards = inputAsList.subList(1, inputAsList.size).windowed(6, 6) {
             Board(it)
         }
 
@@ -83,7 +85,7 @@ object Day4 {
         outer@ for (d in drawingNumbers) {
             inner@ for (b in boards) {
                 b.mark(d)
-                if(b.checkWin()) {
+                if (b.checkWin()) {
                     winningPair = Pair(d, b)
                     break@outer
                 }
@@ -96,10 +98,10 @@ object Day4 {
         return 0
     }
 
-    fun part2(list: List<String>): Int {
-        val drawingNumbers = list[0].split(",").map { it.toInt() }
+    override fun part2(): Int {
+        val drawingNumbers = inputAsList[0].split(",").map { it.toInt() }
 
-        val boards = list.subList(1, list.size).windowed(6, 6) {
+        val boards = inputAsList.subList(1, inputAsList.size).windowed(6, 6) {
             Board(it)
         }
         var numberOfFinishedBoards = 0
@@ -113,7 +115,7 @@ object Day4 {
                 }
 
                 b.mark(d)
-                if(b.checkWin()) {
+                if (b.checkWin()) {
                     numberOfFinishedBoards++
                 }
 
